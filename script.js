@@ -145,7 +145,7 @@ d3.csv("data_final_3.csv", function(error, data){
 				return c;
 			})
 
-	//--------- Making Arraow g (the section)-----------// 
+	//--------- Making Arraow and Rect Btw arrows' g (the section) STARTS-----------// 
 	var arrows = d3.select('svg')
 		.append('g')
 		.attr('id' ,'arrows')
@@ -169,6 +169,67 @@ d3.csv("data_final_3.csv", function(error, data){
 		})
 		.style('fill', '#67775C')
 		.style('opacity','0.2')
+	//--------- Making Arraow and Rect Btw arrows' g (the section) ENDS-----------// 
+
+	//---------- Making rullers STARTS--------------------------------------------//
+	var rullers = d3.select('svg')
+		.append('g')
+		.attr('id' ,'rullers')
+	var ticks = rullers.selectAll('g').data(data)
+		.enter().append('g')
+	ticks.append('line')
+		.attr('class', 'ticks')
+		.attr('x1', 167) 
+		.attr('x2', 180) 
+		.attr('y1', function(d,i){
+			return yPos(i)+boxH/2;
+		}) 
+		.attr('y2', function(d,i){
+			return yPos(i)+boxH/2;
+		})  
+		.attr("stroke-width", 1)
+		.attr("stroke", "grey");
+	ticks.append('text')
+		.attr('class', 'brightness_text')
+		.style('fill', 'black')
+		.style('font', '6px sans-serif')
+		.style('text-anchor', 'end')
+		.attr('x', 190)
+		.attr('y', function(d,i){
+			return yPos(i)+boxH/2 +2;
+		})
+		.text(function(d){
+			return d.Bri_sub;
+		})
+	ticks.append('text')
+		.attr('class', 'brightness_text')
+		.style('fill', 'red')
+		.style('font', '6px sans-serif')
+		.style('text-anchor', 'end')
+		.attr('x', 205)
+		.attr('y', function(d,i){
+			return yPos(i)+boxH/2 +2;
+		})
+		.text(function(d){
+			return Math.round(d.Sat_sub);
+		})
+
+
+
+// .attr('x', (100+67+67+67+67+imgW/2))
+//             	.attr('y', textValue)
+//             	.attr("dy", ".35em")
+//             	.text(function(){
+//             		var bri_per;
+//             		if (fillColorB(bri_sub) > 0.52) bri_per = 'Brighter';
+//             		else if(fillColorB(bri_sub) > 0.48 ) bri_per ='Almost Same';
+//             		else bri_per ='Darker';
+//             		return bri_per;
+//             	})
+//             	.style('opacity', 1)
+
+
+	//---------- Making rullers ENDS--------------------------------------------//
 
 	//----- Statistic starts -------------------------------//
 	var statistic = d3.select('svg')
@@ -258,8 +319,7 @@ d3.csv("data_final_3.csv", function(error, data){
 	//----- Statistic sends -------------------------------//
 
 	
-	//------------------ ARROWS --------------------------//
-	
+	//------------------ ARROWS: call drag and define Shapes STARTS--------------------------//
 	arrow1.call(brTopDrag)
 	arrow1.append('polygon')
 		.attr('fill', 'none')
@@ -283,8 +343,7 @@ d3.csv("data_final_3.csv", function(error, data){
 	arrow2.append('polygon')
 		.attr('fill', '#A4CF8F')
 		.attr('points', '15.26,3.548 6.518,10.11 15.26,16.676 41.757,16.67 41.757,3.542')
-
-
+	//------------------ ARROWS: call drag and define Shapes ENDS--------------------------//
 
 
 	//----- 'POPPING IMAGES and BOXES' starts ------------//
@@ -453,7 +512,6 @@ d3.csv("data_final_3.csv", function(error, data){
         	.attr("y", function(d,i){
         		return yPos(+d.sat_sub_order);
         	})
-
 	}
 
 	//Saturation subtraction Reverse ORDER
