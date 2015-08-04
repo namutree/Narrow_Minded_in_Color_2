@@ -177,6 +177,7 @@ d3.csv("data_final_3.csv", function(error, data){
 		.attr('id' ,'rullers')
 	var ticks = rullers.selectAll('g').data(data)
 		.enter().append('g')
+	//lines (ticks)
 	ticks.append('line')
 		.attr('class', 'ticks')
 		.attr('x1', 167) 
@@ -189,9 +190,10 @@ d3.csv("data_final_3.csv", function(error, data){
 		})  
 		.attr("stroke-width", 1)
 		.attr("stroke", "grey");
+	//saturation text
 	ticks.append('text')
-		.attr('class', 'brightness_text')
-		.style('fill', 'black')
+		.attr('class', 'satruation_text')
+		.style('fill', 'red')
 		.style('font', '6px sans-serif')
 		.style('text-anchor', 'end')
 		.attr('x', 190)
@@ -199,11 +201,12 @@ d3.csv("data_final_3.csv", function(error, data){
 			return yPos(i)+boxH/2 +2;
 		})
 		.text(function(d){
-			return d.Bri_sub;
+			return Math.round(d.Sat_sub);
 		})
+	//brightness text
 	ticks.append('text')
 		.attr('class', 'brightness_text')
-		.style('fill', 'red')
+		.style('fill', 'black')
 		.style('font', '6px sans-serif')
 		.style('text-anchor', 'end')
 		.attr('x', 205)
@@ -211,23 +214,9 @@ d3.csv("data_final_3.csv", function(error, data){
 			return yPos(i)+boxH/2 +2;
 		})
 		.text(function(d){
-			return Math.round(d.Sat_sub);
+			return d.Bri_sub;
 		})
-
-
-
-// .attr('x', (100+67+67+67+67+imgW/2))
-//             	.attr('y', textValue)
-//             	.attr("dy", ".35em")
-//             	.text(function(){
-//             		var bri_per;
-//             		if (fillColorB(bri_sub) > 0.52) bri_per = 'Brighter';
-//             		else if(fillColorB(bri_sub) > 0.48 ) bri_per ='Almost Same';
-//             		else bri_per ='Darker';
-//             		return bri_per;
-//             	})
-//             	.style('opacity', 1)
-
+	
 
 	//---------- Making rullers ENDS--------------------------------------------//
 
@@ -237,8 +226,8 @@ d3.csv("data_final_3.csv", function(error, data){
 		.attr('id','statistic')
 
 	// bar drag...
-	var transPosY, transPosYY;
-	var transOtherPos;
+	var transPosY = -1, transPosYY= -1;
+	var transOtherPos= -1;
 	var brTopDrag = d3.behavior.drag()
 		.on('dragstart', function () {
    			 console.log('Start Dragging Group');
@@ -272,6 +261,82 @@ d3.csv("data_final_3.csv", function(error, data){
 		    	if( rectH <= 0 ) rectH =0;
 		    	return rectH;
 		    })
+		    //-----rullers starts ------- 
+		    //lines
+		    d3.selectAll('.ticks')
+		    	.attr('opacity', function(d){
+		    		var ticksY = d3.select(this).attr('y1');
+
+		    		if(ticksY >= transPosYY + arrowH/2 && ticksY < transPosYY + arrowH/2 + boxH+1) {
+		    			d3.select(this)
+		    				.attr('stroke', 'black')
+		    				.attr('x2', 200);
+		    		}
+		    		else if(ticksY <= transOtherPos + arrowH/2 && ticksY > transOtherPos + arrowH/2 - boxH-1) {
+		    			d3.select(this)
+		    				.attr('stroke', 'black')
+		    				.attr('x2', 200);
+		    		}
+		    		else {
+		    			d3.select(this)
+			    			.attr('stroke', 'grey')
+		    				.attr('x2', 180);
+		    		}
+
+		    		if (ticksY >= transPosYY + arrowH/2 && ticksY < transOtherPos + arrowH/2) return 1;
+		    		else return 0;
+		    	})
+		    //brightness text
+		    d3.selectAll('.brightness_text')
+		    	.attr('opacity', function(d){
+		    		var ticksY = +d3.select(this).attr('y');
+
+		    		if(ticksY >= transPosYY + arrowH/2 +2 && ticksY < transPosYY + arrowH/2 +2 + boxH+1) {
+		    			d3.select(this)
+		    				.attr('x', 245)
+		    				.style('font', '14px sans-serif')
+		    		}
+		    		else if(ticksY <= transOtherPos + arrowH/2 +2 && ticksY > transOtherPos + arrowH/2 +2 - boxH-1) {
+		    			d3.select(this)
+		    				.attr('x', 245)
+		    				.style('font', '14px sans-serif')
+		    		}
+		    		else {
+		    			d3.select(this)
+   		    				.attr('x', 205)
+		    				.style('font', '6px sans-serif')
+
+		    		}
+
+		    		if (ticksY >= transPosYY + arrowH/2 +2 && ticksY < transOtherPos + arrowH/2 +2) return 1;
+		    		else return 0;
+		    	});
+		    //saturation text
+		    d3.selectAll('.satruation_text')
+		    	.attr('opacity', function(d){
+		    		var ticksY = d3.select(this).attr('y');
+
+		    		if(ticksY >= transPosYY + arrowH/2 +2 && ticksY < transPosYY + arrowH/2 +2 + boxH+1) {
+		    			d3.select(this)
+		    				.attr('x', 220)
+		    				.style('font', '14px sans-serif')
+		    		}
+		    		else if(ticksY <= transOtherPos + arrowH/2 +2 && ticksY > transOtherPos + arrowH/2 +2 - boxH-1) {
+		    			d3.select(this)
+		    				.attr('x', 220)
+		    				.style('font', '14px sans-serif')
+		    		}
+		    		else {
+		    			d3.select(this)
+   		    				.attr('x', 190)
+		    				.style('font', '6px sans-serif')
+
+		    		}
+
+		    		if (ticksY >= transPosYY + arrowH/2 +2 && ticksY < transOtherPos + arrowH/2 +2) return 1;
+		    		else return 0;
+		    	});
+		    //-----rullers ends -------
 		});	
 
 	var brBottomDrag = d3.behavior.drag()
@@ -306,6 +371,81 @@ d3.csv("data_final_3.csv", function(error, data){
 		    	if( rectH <= 0 ) rectH =0;
 		    	return rectH;
 		    })
+
+		    //-----rullers starts ------- 
+		    //lines
+		    d3.selectAll('.ticks')
+		    	.attr('opacity', function(d){
+		    		var ticksY = d3.select(this).attr('y1');
+
+		    		if(ticksY <= transPosYY + arrowH/2 && ticksY > transPosYY + arrowH/2 - boxH-1) {
+		    			d3.select(this)
+		    				.attr('stroke', 'black')
+		    				.attr('x2', 200);
+		    		}
+		    		else if(ticksY >= transOtherPos + arrowH/2 && ticksY < transOtherPos + arrowH/2 + boxH+1) {
+		    			d3.select(this)
+		    				.attr('stroke', 'black')
+		    				.attr('x2', 200);
+		    		}
+		    		else {
+		    			d3.select(this)
+			    			.attr('stroke', 'grey')
+		    				.attr('stroke-width', 1)
+		    				.attr('x2', 180);
+		    		}
+
+		    		if (ticksY <= transPosYY + arrowH/2 && ticksY > transOtherPos + arrowH/2) return 1;
+		    		else return 0;
+		    	});
+		    //brightness text
+		    d3.selectAll('.brightness_text')
+		    	.attr('opacity', function(d){
+		    		var ticksY = d3.select(this).attr('y');
+
+		    		if(ticksY <= transPosYY + arrowH/2 +2 && ticksY > transPosYY + arrowH/2 +2 - boxH-1) {
+		    			d3.select(this)
+		    				.attr('x', 245)
+		    				.style('font', '14px sans-serif')
+		    		}else if(ticksY >= transOtherPos + arrowH/2 +2 && ticksY < transOtherPos + arrowH/2 +2 + boxH+1) {
+		    			d3.select(this)
+		    				.attr('x', 245)
+		    				.style('font', '14px sans-serif')
+		    		}
+		    		else {
+		    			d3.select(this)
+   		    				.attr('x', 205)
+		    				.style('font', '6px sans-serif')
+
+		    		}
+
+		    		if (ticksY <= transPosYY + arrowH/2 +2 && ticksY > transOtherPos + arrowH/2 +2) return 1;
+		    		else return 0;
+		    	});
+		    //saturation text
+		    d3.selectAll('.satruation_text')
+		    	.attr('opacity', function(d){
+		    		var ticksY = d3.select(this).attr('y');
+
+		    		if(ticksY <= transPosYY + arrowH/2 +2 && ticksY > transPosYY + arrowH/2 +2 - boxH-1) {
+		    			d3.select(this)
+		    				.attr('x', 220)
+		    				.style('font', '14px sans-serif')
+		    		} else if(ticksY >= transOtherPos + arrowH/2 +2 && ticksY < transOtherPos + arrowH/2 +2 + boxH+1) {
+		    			d3.select(this)
+		    				.attr('x', 220)
+		    				.style('font', '14px sans-serif')
+		    		}
+		    		else {
+		    			d3.select(this)
+   		    				.attr('x', 190)
+		    				.style('font', '6px sans-serif')
+
+		    		}
+
+		    		if (ticksY <= transPosYY + arrowH/2 +2 && ticksY > transOtherPos + arrowH/2 +2) return 1;
+		    		else return 0;
+		    	});
 		});
 
 
@@ -512,6 +652,38 @@ d3.csv("data_final_3.csv", function(error, data){
         	.attr("y", function(d,i){
         		return yPos(+d.sat_sub_order);
         	})
+        d3.selectAll('.satruation_text')
+        	.transition()
+        	.duration(700)
+        	.attr('y', function(d,i){
+        		return +yPos(+d.sat_sub_order) +boxH/2 +2;
+        	})
+        	.attr('opacity', function(d){
+        		var ticksY = +yPos(+d.sat_sub_order) +boxH/2 +2;// +d3.select(this).attr('y');
+        		var aTop = findArrowtop();
+        		var aBottom = findArrowBottom();
+        		if (ticksY >= aTop + arrowH/2 +2 && ticksY <= aBottom + arrowH/2 +2 ) {
+        			return 1;
+        		}
+		    	else return 0;
+        	})
+        	.style('font',  function(d){
+        		var ticksY = +yPos(+d.sat_sub_order) +boxH/2 +2;// +d3.select(this).attr('y');
+        		var aTop = findArrowtop();
+        		var aBottom = findArrowBottom();
+        		if(ticksY >= aTop + arrowH/2 +2 && ticksY < aTop + arrowH/2 +2 + boxH+1) {
+        			d3.select(this).attr('x', 220);
+        			return '14px sans-serif';
+        		}
+        		else if (ticksY <= aBottom + arrowH/2 +2 && ticksY > aBottom + arrowH/2 +2 - boxH-1) {
+        			d3.select(this).attr('x', 220);
+        			return '14px sans-serif';
+        		}
+        		else {
+        			d3.select(this).attr('x', 190);
+        			return '6px sans-serif';
+        		}
+        	})
 	}
 
 	//Saturation subtraction Reverse ORDER
@@ -642,6 +814,31 @@ d3.csv("data_final_3.csv", function(error, data){
 
      		return '<div><p align="right">M: Chose Vivider '+mViv+'%<br>Almost Same '+mSSame+'%<br>Duller '+mDul+'%</p><p align="right">Chose Brighter '+mBri+'%<br>Almost Same '+mBSame+'%<br>Darker '+mDar+'%</p> <p align="right">F: Chose Vivider '+fViv+'%<br>Almost Same '+fSSame+'%<br>Duller '+fDul+'%</p><p align="right">Chose Brighter '+fBri+'%<br>Almost Same '+fBSame+'%<br>Darker '+fDar+'%</p>';
 	}
+
+
+
+
+function findArrowtop(){
+	var arTop = arrow1.attr('transform');
+	var arTop1 = arTop.split(',');
+	var arTop2 = arTop1[1].split(')');
+	var arTop3 = +arTop2[0];
+
+	return arTop3;// + arrowH/2;
+}
+
+function findArrowBottom(){
+	var arBottom = arrow2.attr('transform');
+	var arBottom1 = arBottom.split(',');
+	var arBottom2 = arBottom1[1].split(')');
+	var arBottom3 = +arBottom2[0];
+
+	return arBottom3;// + arrowH/2;
+}
+
+
+	
+	
 
 
 })
