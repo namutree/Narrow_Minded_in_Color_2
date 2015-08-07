@@ -1,5 +1,5 @@
 var w = screen.width;
-	h= 800
+	h= 48*200//800
 	imgW = 64,
 	imgH = 48;
 var sSub =[],
@@ -28,7 +28,10 @@ d3.csv("data_final_3.csv", function(error, data){
 
 	var xPos = d3.scale.linear()
     	.domain([0, +n-1])
-    	.range([0 ,h])
+    	.range([0 , w- imgW-1])
+    var yPos = d3.scale.linear()
+    	.domain([0,+n-1])
+    	.range([10 ,h-64])
 
     //creating uppest level svg
   	var uppest = d3.select('#chart').append('svg')
@@ -40,21 +43,23 @@ d3.csv("data_final_3.csv", function(error, data){
 	var eachRow = uppest.append('g').attr('id','colorRects')
 		.selectAll('g').data(data)
 		.enter().append('g')
-		.attr('id', function(d){
-			return 'n'+d.id;
-		})
-		.attr('class', 'rects')
+			.attr('id', function(d){
+				return 'n'+d.id;
+			})
+			.attr('class', 'rects')
 
-
+	//crop images --> "http://bl.ocks.org/tonyfast/5b462f9545dacbe61b37"
 	var test2 = eachRow.append('defs')
 		.append('pattern')
 		.attr('id', function(d){
-			return d.Original_id;
+			return 'p'+d.Original_id;
 		})
-		.attr('x', 0)
-		.attr('y', 0)
+		.attr('x', function(d){
+			return xPos(+d.id) + imgW/2;
+		})
+		.attr('y', 10)
 		.attr('patternUnits','userSpaceOnUse')
-		.attr('width', 40)
+		.attr('width', imgW)
 		.attr('height', imgH)
 			.append('image')
 			.attr('x', 0)
@@ -67,44 +72,44 @@ d3.csv("data_final_3.csv", function(error, data){
 			})
 
 	var test = eachRow.append('rect')
-		.attr('width', 3)
+		.attr('class', 'ImgBox')
+		.attr('width', 5)
 		.attr('height', imgH)
 		.attr('x', function(d){
+			//console.log(xPos(+d.id));
 			return xPos(+d.id);
 		})
 		.attr('y', 10)
 		.attr('fill', function(d){
-			return 'url(#'+d.Original_id+')';
+			return 'url(#p'+d.Original_id+')';
 		})
 
 
-	test.on("mouseover", function(){
-		console.log('dd');
-		test.attr('width', 30);
-	})
-	.on('mouseout', function(){
-		test.attr('width', 3);
-	})
- // <defs>
- //    <pattern id="image" x="0" y="0" patternUnits="userSpaceOnUse" height="200" width="200">
- //      <image x="0" y="0" height="200" width="200" xlink:href="http://lorempixel.com/100/100" type="image/png"></image>
- //    </pattern>
-// <circle id='top' cx="80" cy="80" r="80" fill="url(#image)" fill-opacity=".6"/>
-//   <circle id='top' cx="240" cy="80" r="80" fill="url(#image2)"/>
+	d3.selectAll('.rects')
+		.on("mouseover", function(data){
 
-//   	.attr('width', boxW)
-// 	.attr('height', boxH)
-// 	.attr('x', function(d){
-// 		return 10;
-// 	})
-// 	.attr('y', function(d,i){
-// 		return yPos(i);
-// 	})
-// 	.style('fill', function(d){
-// 		if (d.sex == 1) return 'rgb(0,0,255)';
-// 		else return 'rgb(255,0,0)'
-// 	})
-// 	.style('opacity', 0.7)
+			d3.selectAll('.ImgBox')
+				.transition()
+				.attr('x', function(d){
+					if (+d.id > +data.id){
+						console.log('dd');
+						return xPos(+d.id) + imgW;
+					}else {
+						return xPos(+d.id);
+					}
+				})
+			d3.select('#p'+data.Original_id).transition().attr('x', xPos(+data.id))
+			d3.select('#n'+data.id).select('rect').transition().attr('width', imgW);
+		})
+		.on('mouseout', function(data){
+			d3.selectAll('.ImgBox')
+				.transition()
+				.attr('x', function(d){
+					return xPos(+d.id);
+				})
+			d3.select('#p'+data.Original_id).transition().attr('x', (xPos(+data.id) + imgW/2));
+			d3.select(this).select('rect').transition().attr('width', 5);
+		})
 
 })
 
