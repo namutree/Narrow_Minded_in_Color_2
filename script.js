@@ -1,7 +1,7 @@
 var w = screen.width;
 	h= 800,
-	imgW = 64,
-	imgH = 48;
+	imgW = 114,
+	imgH = 86;
 var sSub =[],
 	bSub =[];
 var male =0,
@@ -37,12 +37,12 @@ d3.csv("data_final_3.csv", function(error, data){
 
     //creating uppest level svg
   	var uppest = d3.select('#chart').append('svg')
-		.style('background', 'rgb(230,230,230)')
+		.style('background', 'rgb(0,0,0)')
 		.attr('width', w)
 		.attr('height', h)
 
-
-	var eachRow = uppest.append('g').attr('id','colorRects')
+	// for each collumn
+	var eachCollum = uppest.append('g').attr('id','pictures')
 		.selectAll('g').data(data)
 		.enter().append('g')
 			.attr('id', function(d){
@@ -50,8 +50,10 @@ d3.csv("data_final_3.csv", function(error, data){
 			})
 			.attr('class', 'rects')
 
+///////////////////////////////////////////////////////////////////////
+//------------- pictures start --------------------------------------//
 	//crop images --> "http://bl.ocks.org/tonyfast/5b462f9545dacbe61b37"
-	var test2 = eachRow.append('defs')
+	var makingPattern = eachCollum.append('defs')
 		.append('pattern')
 		.attr('id', function(d){
 			return 'p'+d.Original_id;
@@ -70,29 +72,79 @@ d3.csv("data_final_3.csv", function(error, data){
 			.attr('height', imgH)
 			.attr('xlink:href', function(d){
 				var pic = (d.Original_id);
-				return 'data/image/'+pic+'.jpg';
+				return 'data/images/'+pic+'.jpg';
 			})
 
-	var test = eachRow.append('rect')
+	var patternRect = eachCollum.append('rect')
 		.attr('class', 'ImgBox')
 		.attr('width', imgSmW)
 		.attr('height', imgH)
 		.attr('x', function(d){
-			//console.log(xPos(+d.id));
 			return xPos(+d.id);
 		})
 		.attr('y', 10)
 		.attr('fill', function(d){
 			return 'url(#p'+d.Original_id+')';
 		})
+//------------- pictures ends --------------------------------------//
+/////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////
+//------------- Original Color Box starts--------------------------//
+	var oriColor = eachCollum.append('rect')
+		.attr('class', 'oriColor')
+		.attr('width', imgSmW)
+		.attr('height', imgH/2)
+		.attr('x', function(d){
+			return xPos(+d.id);
+		})
+		.attr('y', 10 + imgH)
+		.style('fill', function(d){
+
+			var r = Math.floor(+d.Ori_r);
+			var g = Math.floor(+d.Ori_g);
+			var b = Math.floor(+d.Ori_b);
+			return 'rgb( '+r+', '+g+', '+b+')';
+			// return 'rgb(255,0,0)'
+		})
 
 
+//------------- Original Color Box ends--------------------------//
+//////////////////////////////////////////////////////////////////
+
+
+//////////////////////////////////////////////////////////////////////
+//------------- Picked Color Box starts--------------------------//
+	var pickedColor = eachCollum.append('rect')
+		.attr('class', 'pickedColor')
+		.attr('width', imgSmW)
+		.attr('height', imgH/2)
+		.attr('x', function(d){
+			return xPos(+d.id);
+		})
+		.attr('y', 10 + imgH + imgH/2)
+		.style('fill', function(d){
+
+			var r = Math.floor(+d.Sel_r);
+			var g = Math.floor(+d.Sel_g);
+			var b = Math.floor(+d.Sel_b);
+			return 'rgb( '+r+', '+g+', '+b+')';
+			// return 'rgb(255,0,0)'
+		})
+
+
+//------------- Picked Color Box ends--------------------------//
+//////////////////////////////////////////////////////////////////
+
+
+
+// mouse over and out check!
 	d3.selectAll('.rects')
 		.on("mouseover", function(data){
 
 			//img location
 			d3.selectAll('.ImgBox')
-				.transition()//.duration(100)
+				.transition()
 				.attr('x', function(d){
 					if (+d.id > +data.id) {
 						return xPos(+d.id) + imgW/2-imgSmW;
@@ -113,14 +165,58 @@ d3.csv("data_final_3.csv", function(error, data){
 						return xPos(+d.id) - imgW;
 					}
 				})
-			//pattern location
-			// d3.select('#p'+data.Original_id)
-			// 	.transition().duration(100)
-			// 	.attr('x', xPos(+data.id)- imgW/2)
+	
 			//image size
 			d3.select('#n'+data.id).select('rect')
 				// .transition().duration(100)
 				.attr('width', imgW);
+
+
+			//original color
+			d3.selectAll('.oriColor')
+				.transition()	
+				.attr('width', function(d){
+					if (+d.id == +data.id) {
+						return imgW;
+					}
+					else {
+						return imgSmW;
+					}
+				})
+				.attr('x', function(d){
+					if (+d.id > +data.id) {
+						return xPos(+d.id) + imgW/2-imgSmW;
+					}else if (+d.id < +data.id) {
+						return xPos(+d.id) - imgW/2;
+					}
+					else {
+						return xPos(+d.id) - imgW/2;
+					}
+				})
+
+			//picked color
+			d3.selectAll('.pickedColor')
+				.transition()	
+				.attr('width', function(d){
+					if (+d.id == +data.id) {
+						return imgW;
+					}
+					else {
+						return imgSmW;
+					}
+				})
+				.attr('x', function(d){
+					if (+d.id > +data.id) {
+						return xPos(+d.id) + imgW/2-imgSmW;
+					}else if (+d.id < +data.id) {
+						return xPos(+d.id) - imgW/2;
+					}
+					else {
+						return xPos(+d.id) - imgW/2;
+					}
+				})
+
+
 		})
 		.on('mouseout', function(data){
 			d3.selectAll('.ImgBox')
@@ -133,30 +229,29 @@ d3.csv("data_final_3.csv", function(error, data){
 				.transition()
 				.attr('x', function(d){
 					return xPos(+d.id) + imgW/2;
-					//(xPos(+data.id) + imgW/2)
 				});
 
-			// d3.select('#p'+data.Original_id)
-			// .transition().duration(100)
-			// 	.attr('x', (xPos(+data.id) + imgW/2));
-			
 			d3.select(this).select('rect')
 			// .transition().duration(100)
 				.attr('width', imgSmW);
+
+
+			d3.selectAll('.oriColor')
+				.transition()
+				.attr('width', imgSmW)
+				.attr('x', function(d){
+					return xPos(+d.id);
+				})
+
+			d3.selectAll('.pickedColor')
+				.transition()
+				.attr('width', imgSmW)
+				.attr('x', function(d){
+					return xPos(+d.id);
+				})
 		})
 
-	//  //check the statistic every 0.3 sec!!
-	// var IntervalTest = setInterval(function(){
-	//     	//console.log('yoyo');
-	//     	d3.selectAll('.ImgBox')
-	// 			.transition()
-	// 			.attr('x', function(d){
-	// 				return xPos(+d.id);
-	// 			})
-	// 		d3.select('#p'+data.Original_id).transition().attr('x', (xPos(+data.id) + imgW/2));
-	// 		//d3.select(this).select('rect').transition().attr('width', 5);
 
-	//     },300)
 })
 
 
