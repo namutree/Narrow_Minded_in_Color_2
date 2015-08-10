@@ -1,3 +1,14 @@
+body{
+	background: black;
+}
+#title{
+	color: white;
+	font-family: 'roboto', san-serif;
+	font-weight: 900;
+}
+input, select, textarea{
+    color: #ffffff;
+}
 .oriText{
 	font-family: 'roboto', san-serif;
 	font-weight: 900;
@@ -21,4 +32,17 @@
 	font-weight: 400;
 	text-anchor: middle;
 	fill: white;
+}
+
+.bri_dar {
+	font-family: 'roboto', san-serif;
+	font-weight: 400;
+	text-anchor: middle;
+	fill: white;
+}
+.viv_dul{
+	font-family: 'roboto', san-serif;
+	font-weight: 400;
+	text-anchor: middle;
+	fill: white;	
 }

@@ -159,8 +159,8 @@ d3.csv("data_final_3.csv", function(error, data){
 
 	//saturation arc Picked
 	var arcSatPicked = d3.svg.arc()
-	    .outerRadius(imgW/4)
-		.innerRadius(imgW/4-2)
+	    .outerRadius(imgW/3.5+2)
+		.innerRadius(imgW/3.5)
 	    .startAngle(0)
 	    .endAngle(0)
 	var satArcP = infoBox.append('path')
@@ -170,8 +170,8 @@ d3.csv("data_final_3.csv", function(error, data){
 
 	//saturation arc Center
 	var arcCenter = d3.svg.arc()
-	    .outerRadius(imgW/4 - 5)
-		.innerRadius(imgW/4 - 5 -2)
+	    .outerRadius(imgW/3.5 - 3)
+		.innerRadius(imgW/3.5 - 3 -2)
 	    .startAngle(0)
 	    .endAngle(0)
 	var satArc = infoBox.append('path')
@@ -181,8 +181,8 @@ d3.csv("data_final_3.csv", function(error, data){
 
 	//saturation arc Original
 	var arcSatOri = d3.svg.arc()
-	    .outerRadius(imgW/4 - 10)
-		.innerRadius(imgW/4 - 10 -2)
+	    .outerRadius(imgW/3.5 - 8)
+		.innerRadius(imgW/3.5 - 8 -2)
 	    .startAngle(0)
 	    .endAngle(0)
 	var satArcO = infoBox.append('path')
@@ -192,8 +192,8 @@ d3.csv("data_final_3.csv", function(error, data){
 
 	//brightness arc Picked
 	var arcBriPicked = d3.svg.arc()
-	    .outerRadius(imgW/4)
-		.innerRadius(imgW/4-2)
+	    .outerRadius(imgW/3.5+2)
+		.innerRadius(imgW/3.5)
 	    .startAngle(0)
 	    .endAngle(0)
 	var briArcP = infoBox.append('path')
@@ -209,14 +209,25 @@ d3.csv("data_final_3.csv", function(error, data){
 
 	//brightness arc Original
 	var arcBriOri = d3.svg.arc()
-	    .outerRadius(imgW/4 - 10)
-		.innerRadius(imgW/4 - 10 -2)
+	    .outerRadius(imgW/3.5 - 8)
+		.innerRadius(imgW/3.5 - 8 -2)
 	    .startAngle(0)
 	    .endAngle(0)
 	var briArcO = infoBox.append('path')
 		.attr('d', arcBriOri)
 		.attr('class', 'briArcO')
 		.attr('fill', '#d7514c')
+
+	//vivider/duller & brighter/darker  text
+	var viv_dul = infoBox.append('text').attr('class', 'viv_dul')
+		.attr('x', function(d){	return xPos(+d.id);  })
+		.attr('y', 10+ imgH*2.5 + imgH/8/2)
+		.attr('opacity',0).style('font-size', '0px')
+	var bri_dar = infoBox.append('text').attr('class', 'bri_dar')
+		.attr('x', function(d){	return xPos(+d.id);  })
+		.attr('y', 10+ imgH*3.5 + imgH/8/2)
+		.attr('opacity',0).style('font-size', '0px')
+	
 
 	//legend
 	var legend = infoBox.append('g').attr('class', 'legend')
@@ -234,12 +245,6 @@ d3.csv("data_final_3.csv", function(error, data){
 //------------- Information box ends---------------------------//
 ////////////////////////////////////////////////////////////////////
 
-// d3.select('#n'+data.id).select('.infoBoxBack')
-// 				.attr('x', function(data){	return xPos(+data.id) - imgW/2;  })
-// 				.attr('width', imgW)
-// 				.attr('height', imgH*2.3)
-// 				.transition()
-// 				.attr('opacity', 1)
 ////////////////////////////////////////////////////////////////////////////
 //------------- "Mouse over and out" starts-------------------------------//
 	d3.selectAll('.rects')
@@ -410,8 +415,39 @@ d3.csv("data_final_3.csv", function(error, data){
 				.attr('d', arcBriOri)
 				.attr('opacity', 1)
 			//----brightness arc series ends----------------//
+//id,Original_id,Sel_r,Sel_g,Sel_b,sex,Ori_r,Ori_g,Ori_b,Sel_hue,Sel_sat,Sel_bri,Ori_hue,Ori_sat,Ori_bri,Bri_sub, bri_sub_order,Sat_sub,sat_sub_order
+			//vivider/duller & brighter/darker  text starts ---//
+			d3.select('#n'+data.id).select('.viv_dul')
+				.style('font-size', imgH/8+'px')
+				.text(function(data){
+					if((+data.Sat_sub) >0) return 'duller';
+					else if((+data.Sat_sub) == 0) return 'same';
+					else return 'vivider'; 
+				})
+				.attr('opacity', 1)
 
+			d3.select('#n'+data.id).select('.bri_dar')
+				.style('font-size', imgH/8+'px')
+				.text(function(){
+					if((+data.Bri_sub) >0) return 'darker';
+					else if((+data.Bri_sub) == 0) return 'same';
+					else return 'brighter'; 
+				})
+				.attr('opacity', 1)
 
+			//vivider/duller & brighter/darker  text ends ---//
+
+	// //vivider/duller & brighter/darker  text
+	// var viv_dul = infoBox.append('text').attr('class', 'viv_dul')
+	// 	.attr('x', function(d){	return xPos(+d.id);  })
+	// 	.attr('y', 10+ imgH*2.5)
+	// 	.attr('opacity',0).style('font-size', '0px')
+	// var bri_dar = infoBox.append('text').attr('class', 'bri_dar')
+	// 	.attr('x', function(d){	return xPos(+d.id);  })
+	// 	.attr('y', 10+ imgH*3.5)
+	// 	.attr('opacity',0).style('font-size', '0px')
+
+			//------- legend starts------------------//
 			d3.select('#n'+data.id).select('.legend').selectAll('rect')
 				.transition()
 				.attr('width', imgW/2)
@@ -423,65 +459,15 @@ d3.csv("data_final_3.csv", function(error, data){
 				.attr('y', 10 + imgH +imgH + imgH*2.3 - 5)
 				.style('font-size', imgH/8+'px')
 				.attr('opacity', 1)
+			//------- legend starts------------------//
 
-
-
-// asdfadfa	var legend = infoBox.append('g').attr('class', 'legend')
-// 			var oriBox = legend.append('rect').attr('fill', '#d7514c')
-// 				.attr('x', function(d){	return xPos(+d.id) - imgW/2;  })
-// 			var legendOriText = legend.append('text').attr('class', 'legendOriText')
-// 				.attr('x', function(d){	return xPos(+d.id) - imgW/4;  })
-				//.text('Original')
-// 			var pickedBox = legend.append('rect').attr('fill', '#70beb5')
-// 				.attr('x', function(d){	return xPos(+d.id);  })
-// 			var legendOriText = legend.append('text').attr('class', 'legendPicText')
-// 				.attr('x', function(d){	return xPos(+d.id) + imgW/4;  })
 
 			// --------- infoBox ends ------------------//
 		})
 		.on('mouseout', function(data){
 
-			oriBox
-				.transition().attr('width', 0).attr('height', 0).attr('opacity',0)
-			pickedBox
-				.transition().attr('width', 0).attr('height', 0).attr('opacity',0)
-			legendOriText
-				.transition().style('font-size', '0px').attr('opacity',0)
-			legendPicText
-				.transition().style('font-size', '0px').attr('opacity',0)
-
-
-			arcSatPicked.endAngle(0);
-			satArcP.transition()
-				.attr('opacity',0)
-				.attr('d', arcSatPicked)
-
-			arcCenter.endAngle(0)
-			satArc.transition()
-				.attr('opacity', 0)
-				.attr('d', arcCenter)
-				
-			arcSatOri.endAngle(0);
-			satArcO.transition()
-				.attr('d', arcSatOri)
-				.attr('opacity', 0)
-
-			arcBriPicked.endAngle(0);
-			briArcP.transition()
-				.attr('opacity',0)
-				.attr('d', arcBriPicked)
-
-			briArc.transition()
-				.attr('opacity', 0)
-				.attr('d', arcCenter)
-				
-			arcBriOri.endAngle(0);
-			briArcO.transition()
-				.attr('d', arcBriOri)
-				.attr('opacity', 0)
-
-
-
+			viv_dul.attr('opacity',0)
+			bri_dar.attr('opacity',0)
 
 			d3.selectAll('.ImgBox')
 				.transition()
@@ -522,9 +508,45 @@ d3.csv("data_final_3.csv", function(error, data){
 				.style('font-size', '0px')
 				.attr('opacity', 0)
 
+			//info box-----------------//
+			//info box background
 			infoBoxBack.transition()
 				.attr('opacity',0)
 				.attr('width', 0)
+
+			//Arcs
+			arcSatPicked.endAngle(0);
+			satArcP.transition()
+				.attr('opacity',0).attr('d', arcSatPicked)
+
+			arcCenter.endAngle(0)
+			satArc.transition()
+				.attr('opacity', 0).attr('d', arcCenter)
+				
+			arcSatOri.endAngle(0);
+			satArcO.transition()
+				.attr('d', arcSatOri).attr('opacity', 0)
+
+			arcBriPicked.endAngle(0);
+			briArcP.transition()
+				.attr('opacity',0).attr('d', arcBriPicked)
+
+			briArc.transition()
+				.attr('opacity', 0).attr('d', arcCenter)
+				
+			arcBriOri.endAngle(0);
+			briArcO.transition()
+				.attr('d', arcBriOri).attr('opacity', 0)
+
+			//legend box
+			oriBox
+				.transition().attr('width', 0).attr('height', 0).attr('opacity',0)
+			pickedBox
+				.transition().attr('width', 0).attr('height', 0).attr('opacity',0)
+			legendOriText
+				.transition().style('font-size', '0px').attr('opacity',0)
+			legendPicText
+				.transition().style('font-size', '0px').attr('opacity',0)
 		})
 //------------- "Mouse over and out" ends-------------------------------//
 ///////////////////////////////////////////////////////////////////////////

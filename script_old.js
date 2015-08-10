@@ -200,9 +200,7 @@ d3.csv("data_final_3.csv", function(error, data){
 		.attr('y', function(d,i){
 			return yPos(i)+boxH/2 +2;
 		})
-		.text(function(d){
-			return Math.round(d.Sat_sub);
-		})
+		 
 	//brightness text
 	ticks.append('text')
 		.attr('class', 'brightness_text')
