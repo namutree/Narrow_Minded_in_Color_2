@@ -10,3 +10,15 @@
 	text-anchor: middle;
 	fill: black;
 }
+.legendOriText{
+	font-family: 'roboto', san-serif;
+	font-weight: 400;
+	text-anchor: middle;
+	fill: white;
+}
+.legendPicText{
+	font-family: 'roboto', san-serif;
+	font-weight: 400;
+	text-anchor: middle;
+	fill: white;
+}
