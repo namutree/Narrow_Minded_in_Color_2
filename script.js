@@ -136,11 +136,177 @@ d3.csv("data_final_3.csv", function(error, data){
 //------------- Picked Color Box ends--------------------------//
 //////////////////////////////////////////////////////////////////
 
+/////////////////////////////////////////////////////////////////////
+//------------- creating text box starts---------------------------//
+	var textOri = eachCollum.append('text')
+		.attr('class', 'oriText')
+		.style('font-size', '0px')
+		.attr('y', 10 + imgH +imgH/2 - imgH/6)
+		.text('Original')
+		.attr('opacity',0)
+	var textPicked = eachCollum.append('text')
+		.attr('class', 'pickedText')
+		.attr('y', 10 + imgH +imgH - imgH/6)
+		.text('Picked')
+		.attr('opacity',0)
+//------------- creating text box ends---------------------------//
+////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////
+//------------- Information box starts---------------------------//
+	//info box
+	var infoBox = eachCollum.append('g').attr('class','infoBox')
+	var infoBoxBack = infoBox.append('rect')
+		.attr('class', 'infoBoxBack')
+		.attr('fill', 'rgb(43,43,43)')
+		.attr('y', 10 + imgH +imgH )
+
+	//saturation arc Picked
+	var arcSatPicked = d3.svg.arc()
+	    .outerRadius(imgW/4)
+		.innerRadius(imgW/4-2)
+	    .startAngle(0)
+	    .endAngle(0)
+	var satArcP = infoBox.append('path')
+		.attr('d', arcSatPicked)
+		.attr('class', 'satArcP')
+		.attr('fill', '#70beb5')
+
+	//saturation arc Center
+	var arcCenter = d3.svg.arc()
+	    .outerRadius(imgW/4 - 5)
+		.innerRadius(imgW/4 - 5 -2)
+	    .startAngle(0)
+	    .endAngle(0)
+	var satArc = infoBox.append('path')
+		.attr('d', arcCenter)
+		.attr('class', 'satArc')
+		.attr('fill', '#999999')
+
+	//saturation arc Original
+	var arcSatOri = d3.svg.arc()
+	    .outerRadius(imgW/4 - 10)
+		.innerRadius(imgW/4 - 10 -2)
+	    .startAngle(0)
+	    .endAngle(0)
+	var satArcO = infoBox.append('path')
+		.attr('d', arcSatOri)
+		.attr('class', 'satArcO')
+		.attr('fill', '#d7514c')
+
+	//brightness arc Picked
+	var arcBriPicked = d3.svg.arc()
+	    .outerRadius(imgW/4)
+		.innerRadius(imgW/4-2)
+	    .startAngle(0)
+	    .endAngle(0)
+	var briArcP = infoBox.append('path')
+		.attr('d', arcBriPicked)
+		.attr('class', 'briArcP')
+		.attr('fill', '#70beb5')
+
+	//brightness arc Center
+	var briArc = infoBox.append('path')
+		.attr('d', arcCenter)
+		.attr('class', 'briArc')
+		.attr('fill', '#999999')
+
+	//brightness arc Original
+	var arcBriOri = d3.svg.arc()
+	    .outerRadius(imgW/4 - 10)
+		.innerRadius(imgW/4 - 10 -2)
+	    .startAngle(0)
+	    .endAngle(0)
+	var briArcO = infoBox.append('path')
+		.attr('d', arcBriOri)
+		.attr('class', 'briArcO')
+		.attr('fill', '#d7514c')
+//------------- Information box ends---------------------------//
+////////////////////////////////////////////////////////////////////
 
 
-// mouse over and out check!
+////////////////////////////////////////////////////////////////////////////
+//------------- "Mouse over and out" starts-------------------------------//
 	d3.selectAll('.rects')
 		.on("mouseover", function(data){
+			//----saturation arc series starts----------------//
+			var satAngleP = ((+data.Sel_sat)/ 80 * Math.PI).toFixed(4);
+			console.log(satAngleP);
+			arcSatPicked.endAngle(satAngleP);
+			d3.select('#n'+data.id).select('.satArcP')
+				.transition()
+				.attr('transform', function(data){
+					var xx = xPos(data.id); 
+					var yy = 10+ imgH*2.5;
+					return 'translate('+xx+','+yy+')';
+				})
+				.attr('d', arcSatPicked)
+				.attr('opacity', 1)
+
+			arcCenter.endAngle((Math.PI*2).toFixed(4));
+			d3.select('#n'+data.id).select('.satArc')
+				.transition()
+				.attr('transform', function(data){
+					var xx = xPos(data.id); 
+					var yy = 10+ imgH*2.5;
+					return 'translate('+xx+','+yy+')';
+				})
+				.attr('d', arcCenter)
+				.attr('opacity', 1)
+
+			var satAngleO = ((+data.Ori_sat)/ 80 * Math.PI).toFixed(4);
+			arcSatOri.endAngle(satAngleO);
+			d3.select('#n'+data.id).select('.satArcO')
+				.transition()
+				.attr('transform', function(data){
+					var xx = xPos(data.id); 
+					var yy = 10+ imgH*2.5;
+					return 'translate('+xx+','+yy+')';
+				})
+				.attr('d', arcSatOri)
+				.attr('opacity', 1)
+			//----saturation arc series ends----------------//
+			
+			//----brightness arc series starts----------------//
+			var briAngleP = ((+data.Sel_bri)/ 150 * Math.PI).toFixed(4);
+			console.log(Math.PI)
+			console.log(data.Sel_bri)
+			console.log(briAngleP);
+			arcBriPicked.endAngle(briAngleP);
+			d3.select('#n'+data.id).select('.briArcP')
+				.transition()
+				.attr('transform', function(data){
+					var xx = xPos(data.id); 
+					var yy = 10+ imgH*3.5;
+					return 'translate('+xx+','+yy+')';
+				})
+				.attr('d', arcBriPicked)
+				.attr('opacity', 1)
+
+			d3.select('#n'+data.id).select('.briArc')
+				.transition()
+				.attr('transform', function(data){
+					var xx = xPos(data.id); 
+					var yy = 10+ imgH*3.5;
+					return 'translate('+xx+','+yy+')';
+				})
+				.attr('d', arcCenter)
+				.attr('opacity', 1)
+
+			var briAngleO = ((+data.Ori_bri)/ 150 * Math.PI).toFixed(4);
+			console.log(data.Ori_bri)
+			console.log(briAngleO);
+			arcBriOri.endAngle(briAngleO);
+			d3.select('#n'+data.id).select('.briArcO')
+				.transition()
+				.attr('transform', function(data){
+					var xx = xPos(data.id); 
+					var yy = 10+ imgH*3.5;
+					return 'translate('+xx+','+yy+')';
+				})
+				.attr('d', arcBriOri)
+				.attr('opacity', 1)
+			//----brightness arc series ends----------------//
 
 			//img location
 			d3.selectAll('.ImgBox')
@@ -198,12 +364,9 @@ d3.csv("data_final_3.csv", function(error, data){
 			d3.selectAll('.pickedColor')
 				.transition()	
 				.attr('width', function(d){
-					if (+d.id == +data.id) {
-						return imgW;
-					}
-					else {
-						return imgSmW;
-					}
+					if (+d.id == +data.id) 	return imgW;
+					else 					return imgSmW;
+					
 				})
 				.attr('x', function(d){
 					if (+d.id > +data.id) {
@@ -215,12 +378,63 @@ d3.csv("data_final_3.csv", function(error, data){
 						return xPos(+d.id) - imgW/2;
 					}
 				})
+			
+			// text
+			d3.select('#n'+data.id).select('.oriText')
+				.attr('x', function(data){	return xPos(+data.id);  })
+				.transition()
+				.style('font-size', imgH/4+'px')
+				.attr('opacity', 1)
+			d3.select('#n'+data.id).select('.pickedText')
+				.attr('x', function(data){	return xPos(+data.id);  })
+				.transition()
+				.style('font-size', imgH/4+'px')
+				.attr('opacity', 1)
 
-
+			// infoBox
+			d3.select('#n'+data.id).select('.infoBoxBack')
+				.attr('x', function(data){	return xPos(+data.id) - imgW/2;  })
+				.attr('width', imgW)
+				.attr('height', imgH*2)
+				.transition()
+				.attr('opacity', 1)
+				
 		})
 		.on('mouseout', function(data){
+			arcSatPicked.endAngle(0);
+			satArcP.transition()
+				.attr('opacity',0)
+				.attr('d', arcSatPicked)
+
+			arcCenter.endAngle(0)
+			satArc.transition()
+				.attr('opacity', 0)
+				.attr('d', arcCenter)
+				
+			arcSatOri.endAngle(0);
+			satArcO.transition()
+				.attr('d', arcSatOri)
+				.attr('opacity', 0)
+
+			arcBriPicked.endAngle(0);
+			briArcP.transition()
+				.attr('opacity',0)
+				.attr('d', arcBriPicked)
+
+			briArc.transition()
+				.attr('opacity', 0)
+				.attr('d', arcCenter)
+				
+			arcBriOri.endAngle(0);
+			briArcO.transition()
+				.attr('d', arcBriOri)
+				.attr('opacity', 0)
+
+
+
+
 			d3.selectAll('.ImgBox')
-				.transition()//.duration(100)
+				.transition()
 				.attr('x', function(d){
 					return xPos(+d.id);
 				})
@@ -249,8 +463,21 @@ d3.csv("data_final_3.csv", function(error, data){
 				.attr('x', function(d){
 					return xPos(+d.id);
 				})
-		})
 
+			//text original & picked
+			textOri.transition()
+				.style('font-size', '0px')
+				.attr('opacity', 0)
+			textPicked.transition()
+				.style('font-size', '0px')
+				.attr('opacity', 0)
+
+			infoBoxBack.transition()
+				.attr('opacity',0)
+				.attr('width', 0)
+		})
+//------------- "Mouse over and out" ends-------------------------------//
+///////////////////////////////////////////////////////////////////////////
 
 })
 
