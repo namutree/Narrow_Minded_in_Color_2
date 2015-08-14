@@ -38,7 +38,9 @@ var legendOriText
 var pickedBox
 var legendPicText
 
-var maleBool = false;
+var allBool = true,
+	maleBool = false,
+	femaleBool = false;
 
 //id,Original_id,Sel_r,Sel_g,Sel_b,sex,Ori_r,Ori_g,Ori_b,Sel_hue,Sel_sat,Sel_bri,Ori_hue,Ori_sat,Ori_bri,Bri_sub, bri_sub_order,Sat_sub,sat_sub_order
 d3.csv("data_final_3.csv", function(error, data){
@@ -87,23 +89,27 @@ d3.csv("data_final_3.csv", function(error, data){
     	sData.sort(function(a,b) {return (+b.Sat_sub)-(+a.Sat_sub);});
 		giveIdNumber();
 		reOrder();
+		maleBool = false;
 	})
 
     d3.select('#sat_sub_reverse').on("click", function(){
     	sData.sort(function(a,b) {return (+a.Sat_sub)-(+b.Sat_sub);});
 		giveIdNumber();
 		reOrder();
+		maleBool = false;
 	})
 	d3.select('#bri_sub').on("click", function(){
 		sData.sort(function(a,b) {return (+b.Bri_sub)-(+a.Bri_sub);});
 		giveIdNumber();
 		reOrder();
+		maleBool = false;
 	})
 
     d3.select('#bri_sub_reverse').on("click", function(){
 		sData.sort(function(a,b) {return (+a.Bri_sub)-(+b.Bri_sub);});
 		giveIdNumber();
 		reOrder();
+		maleBool = false;
 	})
 	d3.select('#male').on("click", function(){
 		sData.sort(function(a,b) {return (+a.sex)-(+b.sex);});
@@ -115,6 +121,7 @@ d3.csv("data_final_3.csv", function(error, data){
 		sData.sort(function(a,b) {return (+b.sex)-(+a.sex);});
 		giveIdNumber();
 		reOrder();
+		maleBool = false;
 	})
 
 	function giveIdNumber(){
@@ -127,8 +134,8 @@ d3.csv("data_final_3.csv", function(error, data){
 		makingPattern.transition()
 			.attr('x', function(d){	return xPos(+d.id) + imgW/2;})
 		patternRect.transition()
-			.attr('x', function(d){ 
-				return xPos(+d.id); })
+			.attr('x', function(d){ return xPos(+d.id); })
+			.attr('width',  xPos.rangeBand())
 
 		//oricolor
 		oriColor.transition()
@@ -516,14 +523,18 @@ function main(mainData){
 //------------- "Mouse over and out" starts----------------------//
 	d3.selectAll('.rects')
 		.on("mouseover", function(data){
-			// console.log(data.id);
+			// console.log(data.Original_id);
 			frontIndexBoxOver();
 
 			if(!maleBool){
-			imgOver(data);
-			oriBoxOver(data);
-			picBoxOver(data);
-			textInBoxOver(data);
+				imgOver(data);
+				oriBoxOver(data);
+				picBoxOver(data);
+				textInBoxOver(data);
+			}
+			if(maleBool){
+				MimgOver(data);
+				MoriBoxOver(data);
 			}
 			infoBoxOver(data);
 		})
@@ -531,10 +542,15 @@ function main(mainData){
 			frontIndexBoxOut();
 
 			if(!maleBool){
-			imgOut();
-			oriBoxOut();
-			picBoxOut();	
-			textInBoxOut();
+				imgOut();
+				oriBoxOut();
+				picBoxOut();	
+				textInBoxOut();
+			}
+
+			if(maleBool){
+				MimgOut(data);
+				MoriBoxOut();
 			}
 			
 			infoBoxOut();
@@ -542,6 +558,79 @@ function main(mainData){
 //------------- "Mouse over and out" ends-------------------------------//
 ///////////////////////////////////////////////////////////////////////////
 
+	function MimgOver(data){
+		//img location
+		d3.selectAll('.ImgBox')
+			.transition()
+			.attr('x', function(d){
+				if (d.id < male){
+					if (+d.id > +data.id) 			return xPosMale(+d.id) + imgW/2-xPosMale.rangeBand();
+					else if (+d.id < +data.id) 		return xPosMale(+d.id) - imgW/2;
+					else 							return xPosMale(+d.id) - imgW/2;
+				}else return -100;
+			})
+		d3.selectAll('pattern')
+			.transition()
+			.attr('x', function(d,i){
+				if (d.id < male){
+					if (+d.id== +data.id) 	return xPosMale(+d.id) - imgW/2;
+					else 					return xPosMale(+d.id) - imgW;
+				}else return -100;
+			})
+
+		//image size
+		d3.select('#n'+data.Original_id).select('rect')
+			.attr('width', imgW);
+	}
+	function MimgOut(){
+		d3.selectAll('.ImgBox')
+			.transition()
+			.attr('x', function(d){
+				if (d.id < male) return xPosMale(+d.id);
+				else 	return -100;
+			})
+		
+		d3.selectAll('pattern')
+			.transition()
+			.attr('x', function(d){
+				if (d.id < male) return xPosMale(+d.id) + imgW/2;
+				else 	return -100;
+			});
+
+		d3.selectAll('.ImgBox')
+			.attr('width', xPosMale.rangeBand());
+	}
+	function MoriBoxOver(data){
+	//original color
+		d3.selectAll('.oriColor')
+			.transition()	
+			.attr('width', function(d){
+
+				if (+d.id == +data.id) 	return imgW;
+				else 					return xPosMale.rangeBand();
+			})
+			.attr('x', function(d){
+				if (d.id < male){
+					if (+d.id > +data.id) 		return xPosMale(+d.id) + imgW/2-xPosMale.rangeBand();
+					else if (+d.id < +data.id)	return xPosMale(+d.id) - imgW/2;
+					else 						return xPosMale(+d.id) - imgW/2;
+				}else return -100;
+			})	
+	}
+	function MoriBoxOut(){
+		d3.selectAll('.oriColor')
+			.transition()
+			.attr('width', xPosMale.rangeBand())
+			.attr('x', function(d){
+				if (d.id < male){
+					return xPosMale(+d.id);
+				}else return -100;
+			})
+	}
+
+
+
+	//All
 	function frontIndexBoxOver(){
 		d3.select('.right_Br')
 			.transition()
@@ -780,6 +869,7 @@ function main(mainData){
 		legendPicText
 			.transition().style('font-size', '0px')
 	}
+	
 })
 
 
