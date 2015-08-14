@@ -12,35 +12,6 @@ var sData =[],
 	sDataF =[];
 console.log(w);
 
-var eachCollum
-var makingPattern
-var imgPat
-var patternRect
-var oriColor
-var pickedColor
-var textOri
-var textPicked
-var infoBox
-var infoBoxBack
-var arcSatPicked
-var satArcP 
-var arcCenter
-var satArc
-var arcSatOri
-var satArcO
-var arcBriPicked
-var briArcP
-var briArc
-var arcBriOri
-var briArcO
-var viv_dul 
-var bri_dar
-var legend
-var oriBox
-var legendOriText
-var pickedBox
-var legendPicText
-
 //id,Original_id,Sel_r,Sel_g,Sel_b,sex,Ori_r,Ori_g,Ori_b,Sel_hue,Sel_sat,Sel_bri,Ori_hue,Ori_sat,Ori_bri,Bri_sub, bri_sub_order,Sat_sub,sat_sub_order
 d3.csv("data_final_3.csv", function(error, data){
 	var n = data.length;
@@ -116,9 +87,9 @@ d3.csv("data_final_3.csv", function(error, data){
         .domain(d3.range(0, sData.length))
         .rangeBands([0 + imgW , w - imgW/2], 0.1)
 
-    var xPosMale = d3.scale.ordinal()
-    	.domain(d3.range(0, +male))
-    	.rangeBands([0 + imgW , w - imgW/2], 0.1)
+    var xPosMale = d3.scale.linear()
+    	.domain([0, +male-1])
+    	.range([0 + imgW , w - imgW/2])
     var xPosFemale = d3.scale.linear()
     	.domain([0, +female-1])
     	.range([0 + imgW , w - imgW/2])
@@ -148,12 +119,15 @@ d3.csv("data_final_3.csv", function(error, data){
 		reOrder();
 	})
 	d3.select('#male').on("click", function(){
-		// sData = sDataM;
+		//sData = sDataM;
 		sData.sort(function(a,b) {return (+a.sex)-(+b.sex);});
 		//xPos.domain(d3.range(0, sData.length))
 		// imgSmW = 10
 		giveIdNumber();
-		reOrderMale();
+		reOrder();
+
+		// console.log(sData)
+		// console.log(sDataM)
 	})
 	d3.select('#female').on("click", function(){
 		sData.sort(function(a,b) {return (+b.sex)-(+a.sex);});
@@ -181,57 +155,23 @@ d3.csv("data_final_3.csv", function(error, data){
 		pickedColor.transition()
 			.attr('x', function(d){ return xPos(+d.id); })
 
-		//vivider/birghter text
-		viv_dul
-			.attr('x', function(d){	return xPos(+d.id);  })
 
-		bri_dar
-			.attr('x', function(d){	return xPos(+d.id);  })
-			
-		//legend
-		oriBox
-			.attr('x', function(d){	return xPos(+d.id) - imgW/2;  })
-		legendOriText
-			.attr('x', function(d){	return xPos(+d.id) - imgW/4;  })
-		pickedBox
-			.attr('x', function(d){	return xPos(+d.id);  })
-		legendPicText
-			.attr('x', function(d){	return xPos(+d.id) + imgW/4;  })
-	}
-		function reOrderMale(){
-		//images
-		makingPattern.transition()
-			.attr('x', function(d){	return xPosMale(+d.id) + imgW/2;})
-		patternRect.transition()
-			.attr('x', function(d){ 
-				return xPosMale(+d.id); })
-			.attr('width',  xPosMale.rangeBand())
+	//vivider/birghter text
+	viv_dul
+		.attr('x', function(d){	return xPos(+d.id);  })
 
-		//oricolor
-		oriColor.transition()
-			.attr('x', function(d){ return xPosMale(+d.id); })
-			.attr('width',  xPosMale.rangeBand())
-		//picked color
-		pickedColor.transition()
-			.attr('x', function(d){ return xPosMale(+d.id); })
-			.attr('width',  xPosMale.rangeBand())
-
-		//vivider/birghter text
-		viv_dul
-			.attr('x', function(d){	return xPosMale(+d.id);  })
-		bri_dar
-			.attr('x', function(d){	return xPosMale(+d.id);  })
-
-			
-		//legend
-		oriBox
-			.attr('x', function(d){	return xPosMale(+d.id) - imgW/2;  })
-		legendOriText
-			.attr('x', function(d){	return xPosMale(+d.id) - imgW/4;  })
-		pickedBox
-			.attr('x', function(d){	return xPosMale(+d.id);  })
-		legendPicText
-			.attr('x', function(d){	return xPosMale(+d.id) + imgW/4;  })
+	bri_dar
+		.attr('x', function(d){	return xPos(+d.id);  })
+		
+	//legend
+	oriBox
+		.attr('x', function(d){	return xPos(+d.id) - imgW/2;  })
+	legendOriText
+		.attr('x', function(d){	return xPos(+d.id) - imgW/4;  })
+	pickedBox
+		.attr('x', function(d){	return xPos(+d.id);  })
+	legendPicText
+		.attr('x', function(d){	return xPos(+d.id) + imgW/4;  })
 	}
 //-------------- button Click ends (changing orders)-------------------------------------------------------//
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -303,16 +243,13 @@ d3.csv("data_final_3.csv", function(error, data){
 		.attr('transform', 'translate('+(FI_X1+FI_X2)/2+','+(10+imgH*7/4+11)+')')//(10+imgH+10+imgH+imgH/2)/2
 //---------------------front index boxes starts --------------------------------------------------//
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-// window.onload = function(){
-	main(sData);
-// }
-
-function main(mainData){
+//main(sData);
+//function main(mainData){
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //-----------------------creating each column starts--------------------------------------------//
 	// for each collumn
-	eachCollum = uppest.append('g').attr('id','pictures')
-		.selectAll('g').data(mainData)
+	var eachCollum = uppest.append('g').attr('id','pictures')
+		.selectAll('g').data(sData)
 		.enter().append('g')
 			.attr('id', function(d){
 				return 'n'+d.Original_id;
@@ -324,7 +261,7 @@ function main(mainData){
 ///////////////////////////////////////////////////////////////////////
 //------------- pictures start --------------------------------------//
 	//crop images --> "http://bl.ocks.org/tonyfast/5b462f9545dacbe61b37"
-	makingPattern = eachCollum.append('defs')
+	var makingPattern = eachCollum.append('defs')
 		.append('pattern')
 		.attr('id', function(d){
 			return 'p'+d.Original_id;
@@ -336,7 +273,7 @@ function main(mainData){
 		.attr('patternUnits','userSpaceOnUse')
 		.attr('width', imgW)
 		.attr('height', imgH)
-	imgPat = makingPattern.append('image')
+	var imgPat = makingPattern.append('image')
 			.attr('x', 0)
 			.attr('y', 0)
 			.attr('width', imgW)
@@ -346,7 +283,7 @@ function main(mainData){
 				return 'data/imgs/'+pic+'.jpg';
 			})
 
-	patternRect = eachCollum.append('rect')
+	var patternRect = eachCollum.append('rect')
 		// .transition()
 		// .delay(function(d){
 		// 	return d.id *10;			
@@ -366,7 +303,7 @@ function main(mainData){
 
 //////////////////////////////////////////////////////////////////////
 //------------- Original Color Box starts--------------------------//
-	oriColor = eachCollum.append('rect')
+	var oriColor = eachCollum.append('rect')
 		// .transition()
 		// .delay(function(d){
 		// 	return d.id *10;			
@@ -389,7 +326,7 @@ function main(mainData){
 
 //////////////////////////////////////////////////////////////////////
 //------------- Picked Color Box starts--------------------------//
-	pickedColor = eachCollum.append('rect')
+	var pickedColor = eachCollum.append('rect')
 		// .transition()
 		// .delay(function(d){
 		// 	return d.id *10;			
@@ -412,13 +349,13 @@ function main(mainData){
 
 /////////////////////////////////////////////////////////////////////
 //------------- creating text box starts---------------------------//
-	textOri = eachCollum.append('text')
+	var textOri = eachCollum.append('text')
 		.attr('class', 'oriText')
 		.style('font-size', '0px')
 		.attr('y', 10 + imgH +imgH/2 - imgH/6)
 		.text('Original')
 		.attr('opacity',0)
-	textPicked = eachCollum.append('text')
+	var textPicked = eachCollum.append('text')
 		.attr('class', 'pickedText')
 		.attr('y', 10 + imgH +imgH - imgH/6)
 		.text('Picked')
@@ -429,93 +366,93 @@ function main(mainData){
 /////////////////////////////////////////////////////////////////////
 //------------- Information box starts---------------------------//
 	//info box
-	infoBox = eachCollum.append('g').attr('class','infoBox')
-	infoBoxBack = infoBox.append('rect')
+	var infoBox = eachCollum.append('g').attr('class','infoBox')
+	var infoBoxBack = infoBox.append('rect')
 		.attr('class', 'infoBoxBack')
 		.attr('fill', 'rgb(43,43,43)')
 		.attr('y', 10 + imgH +imgH )
 
 	//saturation arc Picked
-	arcSatPicked = d3.svg.arc()
+	var arcSatPicked = d3.svg.arc()
 	    .outerRadius(imgW/3.5+2)
 		.innerRadius(imgW/3.5)
 	    .startAngle(0)
 	    .endAngle(0)
-	satArcP = infoBox.append('path')
+	var satArcP = infoBox.append('path')
 		.attr('d', arcSatPicked	)
 		.attr('class', 'satArcP')
 		.attr('fill', '#70beb5')
 
 	//saturation arc Center
-	arcCenter = d3.svg.arc()
+	var arcCenter = d3.svg.arc()
 	    .outerRadius(imgW/3.5 - 3)
 		.innerRadius(imgW/3.5 - 3 -2)
 	    .startAngle(0)
 	    .endAngle(0)
-	satArc = infoBox.append('path')
+	var satArc = infoBox.append('path')
 		.attr('d', arcCenter)
 		.attr('class', 'satArc')
 		.attr('fill', '#999999')
 
 	//saturation arc Original
-	arcSatOri = d3.svg.arc()
+	var arcSatOri = d3.svg.arc()
 	    .outerRadius(imgW/3.5 - 8)
 		.innerRadius(imgW/3.5 - 8 -2)
 	    .startAngle(0)
 	    .endAngle(0)
-	satArcO = infoBox.append('path')
+	var satArcO = infoBox.append('path')
 		.attr('d', arcSatOri)
 		.attr('class', 'satArcO')
 		.attr('fill', '#d7514c')
 
 	//brightness arc Picked
-	arcBriPicked = d3.svg.arc()
+	var arcBriPicked = d3.svg.arc()
 	    .outerRadius(imgW/3.5+2)
 		.innerRadius(imgW/3.5)
 	    .startAngle(0)
 	    .endAngle(0)
-	briArcP = infoBox.append('path')
+	var briArcP = infoBox.append('path')
 		.attr('d', arcBriPicked)
 		.attr('class', 'briArcP')
 		.attr('fill', '#70beb5')
 
 	//brightness arc Center
-	briArc = infoBox.append('path')
+	var briArc = infoBox.append('path')
 		.attr('d', arcCenter)
 		.attr('class', 'briArc')
 		.attr('fill', '#999999')
 
 	//brightness arc Original
-	arcBriOri = d3.svg.arc()
+	var arcBriOri = d3.svg.arc()
 	    .outerRadius(imgW/3.5 - 8)
 		.innerRadius(imgW/3.5 - 8 -2)
 	    .startAngle(0)
 	    .endAngle(0)
-	briArcO = infoBox.append('path')
+	var briArcO = infoBox.append('path')
 		.attr('d', arcBriOri)
 		.attr('class', 'briArcO')
 		.attr('fill', '#d7514c')
 
 	//vivider/duller & brighter/darker  text
-	viv_dul = infoBox.append('text').attr('class', 'viv_dul')
+	var viv_dul = infoBox.append('text').attr('class', 'viv_dul')
 		.attr('x', function(d){	return xPos(+d.id);  })
 		.attr('y', 10+ imgH*2.5 + imgH/8/2)
 		.attr('opacity',0).style('font-size', '0px')
-	bri_dar = infoBox.append('text').attr('class', 'bri_dar')
+	var bri_dar = infoBox.append('text').attr('class', 'bri_dar')
 		.attr('x', function(d){	return xPos(+d.id);  })
 		.attr('y', 10+ imgH*3.5 + imgH/8/2)
 		.attr('opacity',0).style('font-size', '0px')
 	
 	//legend
-	legend = infoBox.append('g').attr('class', 'legend')
-	oriBox = legend.append('rect').attr('fill', '#d7514c')
+	var legend = infoBox.append('g').attr('class', 'legend')
+	var oriBox = legend.append('rect').attr('fill', '#d7514c')
 		.attr('x', function(d){	return xPos(+d.id) - imgW/2;  })
-	legendOriText = legend.append('text').attr('class', 'legendOriText')
+	var legendOriText = legend.append('text').attr('class', 'legendOriText')
 		.attr('x', function(d){	return xPos(+d.id) - imgW/4;  })
 		.text('Original').attr('opacity',0)
-	pickedBox = legend.append('rect').attr('fill', '#70beb5')
+	var pickedBox = legend.append('rect').attr('fill', '#70beb5')
 		.attr('x', function(d){	return xPos(+d.id);  })
-	legendPicText = legend.append('text').attr('class', 'legendPicText')
+	var legendPicText = legend.append('text').attr('class', 'legendPicText')
 		.attr('x', function(d){	return xPos(+d.id) + imgW/4;  })
 		.text('Picked').attr('opacity',0)
 //------------- Information box ends---------------------------//
@@ -527,7 +464,7 @@ function main(mainData){
 //------------- graph ends --------------------------------------//
 ///////////////////////////////////////////////////////////////////
 
-}
+//}
 
 ///////////////////////////////////////////////////////////////////
 //------------- "Mouse over and out" starts----------------------//
@@ -830,8 +767,7 @@ function main(mainData){
 
 		arcBriPicked.startAngle(0).endAngle(0);
 		briArcP
-			.attr('d', arcBriPicked)
-			.transition().attr('opacity',0)
+			.attr('opacity',0).attr('d', arcBriPicked)
 
 		briArc
 			.attr('d', arcCenter)

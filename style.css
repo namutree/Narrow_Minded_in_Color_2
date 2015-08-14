@@ -5,10 +5,32 @@ body{
 	color: white;
 	font-family: 'roboto', san-serif;
 	font-weight: 900;
+	font-size: 2em;
 }
-input, select, textarea{
-    color: #ffffff;
+input{
+	background-color: white;
 }
+.frontIndexL{
+	stroke: white;
+	stroke-width: 2;
+}
+.frontIndexT{
+	font-family: 'roboto', san-serif;
+	font-weight: 400;
+	text-anchor: middle;
+	font-size: 0.7em;
+	dominant-baseline: central;
+	fill: white;
+}
+.frontIndexTB{
+	font-family: 'roboto', san-serif;
+	font-weight: 100;
+	text-anchor: middle;
+	font-size: 0.2em;
+	dominant-baseline: central;
+	fill: white;
+}
+
 .oriText{
 	font-family: 'roboto', san-serif;
 	font-weight: 900;
