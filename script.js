@@ -38,6 +38,8 @@ var legendOriText
 var pickedBox
 var legendPicText
 
+var maleBool = false;
+
 //id,Original_id,Sel_r,Sel_g,Sel_b,sex,Ori_r,Ori_g,Ori_b,Sel_hue,Sel_sat,Sel_bri,Ori_hue,Ori_sat,Ori_bri,Bri_sub, bri_sub_order,Sat_sub,sat_sub_order
 d3.csv("data_final_3.csv", function(error, data){
 	var n = data.length;
@@ -107,6 +109,7 @@ d3.csv("data_final_3.csv", function(error, data){
 		sData.sort(function(a,b) {return (+a.sex)-(+b.sex);});
 		giveIdNumber();
 		reOrderMale();
+		maleBool = true;
 	})
 	d3.select('#female').on("click", function(){
 		sData.sort(function(a,b) {return (+b.sex)-(+a.sex);});
@@ -516,20 +519,23 @@ function main(mainData){
 			// console.log(data.id);
 			frontIndexBoxOver();
 
+			if(!maleBool){
 			imgOver(data);
 			oriBoxOver(data);
 			picBoxOver(data);
 			textInBoxOver(data);
-			
+			}
 			infoBoxOver(data);
 		})
 		.on('mouseout', function(data){
 			frontIndexBoxOut();
 
+			if(!maleBool){
 			imgOut();
 			oriBoxOut();
 			picBoxOut();	
 			textInBoxOut();
+			}
 			
 			infoBoxOut();
 		})
