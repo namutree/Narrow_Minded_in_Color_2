@@ -42,6 +42,10 @@ var allBool = true,
 	maleBool = false,
 	femaleBool = false;
 
+var xPos,
+	xPosMale,
+	xPosFemale;
+
 //id,Original_id,Sel_r,Sel_g,Sel_b,sex,Ori_r,Ori_g,Ori_b,Sel_hue,Sel_sat,Sel_bri,Ori_hue,Ori_sat,Ori_bri,Bri_sub, bri_sub_order,Sat_sub,sat_sub_order
 d3.csv("data_final_3.csv", function(error, data){
 	var n = data.length;
@@ -72,16 +76,16 @@ d3.csv("data_final_3.csv", function(error, data){
     });
 	console.log('male:', male,' female:', female);
 
-    var xPos = d3.scale.ordinal()
+    xPos = d3.scale.ordinal()
         .domain(d3.range(0, sData.length))
         .rangeBands([0 + imgW , w - imgW/2], 0.1)
 
-    var xPosMale = d3.scale.ordinal()
+    xPosMale = d3.scale.ordinal()
     	.domain(d3.range(0, +male))
     	.rangeBands([0 + imgW , w - imgW/2], 0.1)
-    var xPosFemale = d3.scale.linear()
-    	.domain([0, +female-1])
-    	.range([0 + imgW , w - imgW/2])
+    xPosFemale = d3.scale.ordinal()
+    	.domain(d3.range(0, +female))
+    	.rangeBands([0 + imgW , w - imgW/2], 0.1)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //-------------- button Click starts (changing orders)-------------------------------------------------------//
@@ -89,39 +93,50 @@ d3.csv("data_final_3.csv", function(error, data){
     	sData.sort(function(a,b) {return (+b.Sat_sub)-(+a.Sat_sub);});
 		giveIdNumber();
 		reOrder();
-		maleBool = false;
 	})
 
     d3.select('#sat_sub_reverse').on("click", function(){
     	sData.sort(function(a,b) {return (+a.Sat_sub)-(+b.Sat_sub);});
 		giveIdNumber();
 		reOrder();
-		maleBool = false;
 	})
 	d3.select('#bri_sub').on("click", function(){
 		sData.sort(function(a,b) {return (+b.Bri_sub)-(+a.Bri_sub);});
 		giveIdNumber();
 		reOrder();
-		maleBool = false;
+	
 	})
 
     d3.select('#bri_sub_reverse').on("click", function(){
 		sData.sort(function(a,b) {return (+a.Bri_sub)-(+b.Bri_sub);});
 		giveIdNumber();
 		reOrder();
-		maleBool = false;
+		
 	})
 	d3.select('#male').on("click", function(){
+		allBool = 	 false;
+		maleBool = 	 true;
+		femaleBool = false;
 		sData.sort(function(a,b) {return (+a.sex)-(+b.sex);});
 		giveIdNumber();
-		reOrderMale();
-		maleBool = true;
+		reOrder();
+		
 	})
 	d3.select('#female').on("click", function(){
+		allBool = 	 false;
+		maleBool = 	 false;
+		femaleBool = true;
 		sData.sort(function(a,b) {return (+b.sex)-(+a.sex);});
 		giveIdNumber();
 		reOrder();
-		maleBool = false;
+		
+	})
+	d3.select('#all').on("click", function(){
+		allBool = 	 true;
+		maleBool = 	 false;
+		femaleBool = false;
+		giveIdNumber();
+		reOrder();
 	})
 
 	function giveIdNumber(){
@@ -132,71 +147,111 @@ d3.csv("data_final_3.csv", function(error, data){
 	function reOrder(){
 		//images
 		makingPattern.transition()
-			.attr('x', function(d){	return xPos(+d.id) + imgW/2;})
-		patternRect.transition()
-			.attr('x', function(d){ return xPos(+d.id); })
-			.attr('width',  xPos.rangeBand())
-
-		//oricolor
-		oriColor.transition()
-			.attr('x', function(d){ return xPos(+d.id); })
-		//picked color
-		pickedColor.transition()
-			.attr('x', function(d){ return xPos(+d.id); })
-
-		infoBox
-			.attr('transform', function(d){
-				var xxx = xPos(+d.id) - imgW/2;
-				var yyy = 10 + imgH +imgH;
-				return 'translate('+xxx+','+yyy+')';
-			} )
-
-	}
-		function reOrderMale(){
-		//images
-		makingPattern.transition()
 			.attr('x', function(d){	
-				if (d.id < male) return xPosMale(+d.id) + imgW/2;
-				else 	return -10;
-			})
+				 if(allBool){
+					return xPos(+d.id) + imgW/2;
+				}else if(maleBool){
+					if (d.id < male) return xPosMale(+d.id) + imgW/2;
+					else 	return -10;
+				}else if(femaleBool){
+					if (d.id < female) return xPosFemale(+d.id) + imgW/2;
+					else 	return -10;
+				}
+
+				})
 		patternRect.transition()
 			.attr('x', function(d){ 
-				if (d.id < male) return xPosMale(+d.id); 
-				else 	return -10;
+				if(allBool){
+					return xPos(+d.id);
+				}else if(maleBool){
+					if (d.id < male) return xPosMale(+d.id); 
+					else 	return -10;
+				}else if(femaleBool){
+					if (d.id < female) return xPosFemale(+d.id); 
+					else 	return -10;
+				}
 			})
-			.attr('width',  function(d){
-				if (d.id < male) return xPosMale.rangeBand();
-				else return 0; 
+			.attr('width', function(d){
+				if(allBool) {
+					return xPos.rangeBand();
+				}else if(maleBool) {
+					if (d.id < male) return xPosMale.rangeBand();
+					else return 0; 
+				}else if(femaleBool){
+					if (d.id < female) return xPosFemale.rangeBand();
+					else return 0;
+				}
 			} )
 
 		//oricolor
 		oriColor.transition()
 			.attr('x', function(d){ 
-				if (d.id < male) return xPosMale(+d.id); 
-				else 	return -10;
+				if(allBool) {
+					return xPos(+d.id);
+				}else if(maleBool){
+					if (d.id < male) return xPosMale(+d.id); 
+					else 	return -10;
+				}else if(femaleBool){
+					if (d.id < female) return xPosFemale(+d.id); 
+					else 	return -10;
+				}
 			})
-			.attr('width',  function(d){
-				if (d.id < male) return xPosMale.rangeBand();
-				else return 0; 
-			} )
+			.attr('width', function(d){ 
+				if(allBool) {
+					return xPos.rangeBand();
+				}else if(maleBool){
+					if (d.id < male) return xPosMale.rangeBand(); 
+					else 	return 0;
+				}else if(femaleBool){
+					if (d.id < female) return xPosFemale.rangeBand(); 
+					else 	return 0;
+				}
+			})
 		//picked color
 		pickedColor.transition()
 			.attr('x', function(d){ 
-				if (d.id < male) return xPosMale(+d.id); 
-				else 	return -10;
+				if(allBool){
+					return xPos(+d.id); 
+				}else if(maleBool){
+					if (d.id < male) return xPosMale(+d.id); 
+					else 	return -10;
+				}else if(femaleBool){
+					if (d.id < female) return xPosFemale(+d.id); 
+					else 	return -10;
+				}
 			})
-			.attr('width',  function(d){
-				if (d.id < male) return xPosMale.rangeBand();
-				else return 0; 
-			} )
+			.attr('width', function(d){ 
+				if(allBool) {
+					return xPos.rangeBand();
+				}else if(maleBool){
+					if (d.id < male) return xPosMale.rangeBand(); 
+					else 	return 0;
+				}else if(femaleBool){
+					if (d.id < female) return xPosFemale.rangeBand(); 
+					else 	return 0;
+				}
+			})
+
+
 		infoBox
 			.attr('transform', function(d){
-				var xxx = xPos(+d.id) - imgW/2;
-				var yyy = 10 + imgH +imgH;
+				var xxx,
+					yyy;
+				yyy = 10 + imgH +imgH;
+				if(allBool){
+					xxx = xPos(+d.id) - imgW/2;	
+				}else if(maleBool){
+					if (d.id < male) xxx = xPosMale(+d.id) - imgW/2;
+					else xxx = -100;
+				}else if(femaleBool){
+					if (d.id < female) xxx = xPosFemale(+d.id) - imgW/2;
+					else xxx = -100
+				}
 				return 'translate('+xxx+','+yyy+')';
 			} )
 
 	}
+	
 //-------------- button Click ends (changing orders)-------------------------------------------------------//
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -526,351 +581,78 @@ function main(mainData){
 			// console.log(data.Original_id);
 			frontIndexBoxOver();
 
-			if(!maleBool){
+			// if(!maleBool){
 				imgOver(data);
 				oriBoxOver(data);
 				picBoxOver(data);
 				textInBoxOver(data);
-			}
-			if(maleBool){
-				MimgOver(data);
-				MoriBoxOver(data);
-			}
+				
+			// }
+			// if(maleBool){
+			// 	M_imgOver(data);
+			// 	M_oriBoxOver(data);
+			// 	M_picBoxOver(data);
+			// 	M_textInBoxOver(data);
+				
+			// }
 			infoBoxOver(data);
+			
 		})
 		.on('mouseout', function(data){
 			frontIndexBoxOut();
 
-			if(!maleBool){
+			// if(!maleBool){
 				imgOut();
 				oriBoxOut();
 				picBoxOut();	
 				textInBoxOut();
-			}
+			// }
 
-			if(maleBool){
-				MimgOut(data);
-				MoriBoxOut();
-			}
-			
+			// if(maleBool){
+			// 	M_imgOut(data);
+			// 	M_oriBoxOut();
+			// 	M_picBoxOut();
+			// 	M_textInBoxOut();
+			// }
 			infoBoxOut();
+			
+			
 		})
 //------------- "Mouse over and out" ends-------------------------------//
 ///////////////////////////////////////////////////////////////////////////
 
-	function MimgOver(data){
-		//img location
-		d3.selectAll('.ImgBox')
-			.transition()
-			.attr('x', function(d){
-				if (d.id < male){
-					if (+d.id > +data.id) 			return xPosMale(+d.id) + imgW/2-xPosMale.rangeBand();
-					else if (+d.id < +data.id) 		return xPosMale(+d.id) - imgW/2;
-					else 							return xPosMale(+d.id) - imgW/2;
-				}else return -100;
-			})
-		d3.selectAll('pattern')
-			.transition()
-			.attr('x', function(d,i){
-				if (d.id < male){
-					if (+d.id== +data.id) 	return xPosMale(+d.id) - imgW/2;
-					else 					return xPosMale(+d.id) - imgW;
-				}else return -100;
-			})
-
-		//image size
-		d3.select('#n'+data.Original_id).select('rect')
-			.attr('width', imgW);
-	}
-	function MimgOut(){
-		d3.selectAll('.ImgBox')
-			.transition()
-			.attr('x', function(d){
-				if (d.id < male) return xPosMale(+d.id);
-				else 	return -100;
-			})
-		
-		d3.selectAll('pattern')
-			.transition()
-			.attr('x', function(d){
-				if (d.id < male) return xPosMale(+d.id) + imgW/2;
-				else 	return -100;
-			});
-
-		d3.selectAll('.ImgBox')
-			.attr('width', xPosMale.rangeBand());
-	}
-	function MoriBoxOver(data){
-	//original color
-		d3.selectAll('.oriColor')
-			.transition()	
-			.attr('width', function(d){
-
-				if (+d.id == +data.id) 	return imgW;
-				else 					return xPosMale.rangeBand();
-			})
-			.attr('x', function(d){
-				if (d.id < male){
-					if (+d.id > +data.id) 		return xPosMale(+d.id) + imgW/2-xPosMale.rangeBand();
-					else if (+d.id < +data.id)	return xPosMale(+d.id) - imgW/2;
-					else 						return xPosMale(+d.id) - imgW/2;
-				}else return -100;
-			})	
-	}
-	function MoriBoxOut(){
-		d3.selectAll('.oriColor')
-			.transition()
-			.attr('width', xPosMale.rangeBand())
-			.attr('x', function(d){
-				if (d.id < male){
-					return xPosMale(+d.id);
-				}else return -100;
-			})
-	}
-
-
-
-	//All
-	function frontIndexBoxOver(){
-		d3.select('.right_Br')
-			.transition()
-			.attr('transform', 'translate('+(-imgW/2)+',0)')
-		d3.selectAll('.frontIndexT')
-			.transition()
-			.attr('opacity', 0)
-		d3.selectAll('.frontIndexTB')
-			.transition()
-			.attr('opacity', 0)
-	}
-
-	function frontIndexBoxOut(){
-		d3.select('.right_Br')
-			.transition()
-			.attr('transform', 'translate(0,0)')
-		d3.selectAll('.frontIndexT')
-			.transition()
-			.attr('opacity', 1)
-		d3.selectAll('.frontIndexTB')
-			.transition()
-			.attr('opacity', 1)
-	}
-
-	function imgOver(data){
-
-		//img location
-		d3.selectAll('.ImgBox')
-			.transition()
-			.attr('x', function(d){
-				if (+d.id > +data.id) 			return xPos(+d.id) + imgW/2-xPos.rangeBand();
-				else if (+d.id < +data.id) 		return xPos(+d.id) - imgW/2;
-				else 							return xPos(+d.id) - imgW/2;
-			})
-		d3.selectAll('pattern')
-			.transition()
-			.attr('x', function(d,i){
-				if (+d.id== +data.id) 	return xPos(+d.id) - imgW/2;
-				else 					return xPos(+d.id) - imgW;
-			})
-
-		//image size
-		d3.select('#n'+data.Original_id).select('rect')
-			.attr('width', imgW);
-	}
-	function imgOut(){
-		d3.selectAll('.ImgBox')
-			.transition()
-			.attr('x', function(d,i){
-				return xPos(+d.id);
-			})
-		
-		d3.selectAll('pattern')
-			.transition()
-			.attr('x', function(d,i){
-				return xPos(+d.id) + imgW/2;
-			});
-
-		d3.selectAll('.ImgBox')
-			.attr('width', xPos.rangeBand());
-	}
-
-	function oriBoxOver(data){
-	//original color
-		d3.selectAll('.oriColor')
-			.transition()	
-			.attr('width', function(d){
-				if (+d.id == +data.id) 	return imgW;
-				else 					return xPos.rangeBand();
-			})
-			.attr('x', function(d){
-				if (+d.id > +data.id) 		return xPos(+d.id) + imgW/2-xPos.rangeBand();
-				else if (+d.id < +data.id)	return xPos(+d.id) - imgW/2;
-				else 						return xPos(+d.id) - imgW/2;
-			})	
-	}
-	function oriBoxOut(){
-		d3.selectAll('.oriColor')
-			.transition()
-			.attr('width', xPos.rangeBand())
-			.attr('x', function(d){
-				return xPos(+d.id);
-			})
-	}
-	function picBoxOver(data){
-		//picked color
-		d3.selectAll('.pickedColor')
-			.transition()	
-			.attr('width', function(d){
-				if (+d.id == +data.id) 	return imgW;
-				else 					return xPos.rangeBand();
-			})
-			.attr('x', function(d){
-				if (+d.id > +data.id) 		return xPos(+d.id) + imgW/2-xPos.rangeBand();
-				else if (+d.id < +data.id) 	return xPos(+d.id) - imgW/2;
-				else 						return xPos(+d.id) - imgW/2;
-			})
-	}
-	function picBoxOut(){
-		d3.selectAll('.pickedColor')
-			.transition()
-			.attr('width', xPos.rangeBand())
-			.attr('x', function(d){
-				return xPos(+d.id);
-			})
-	}
-	function textInBoxOver(data){
-		// text
-		d3.select('#n'+data.Original_id).select('.oriText')
-			.attr('x', function(data){	return xPos(+data.id);  })
-			.transition()
-			.style('font-size', imgH/4+'px')
-			.attr('opacity', 1)
-		d3.select('#n'+data.Original_id).select('.pickedText')
-			.attr('x', function(data){	return xPos(+data.id);  })
-			.transition()
-			.style('font-size', imgH/4+'px')
-			.attr('opacity', 1)
-	}
-	function textInBoxOut(){
-		//text original & picked
-		textOri.transition()
-			.style('font-size', '0px')
-			.attr('opacity', 0)
-		textPicked.transition()
-			.style('font-size', '0px')
-			.attr('opacity', 0)
-	}
-
-	function infoBoxOver(data){
-		d3.select('#n'+data.Original_id).select('.infoBox').transition().attr('opacity', 1);
-		//infobox background
-		d3.select('#n'+data.Original_id).select('.infoBoxBack')
-			.attr('width', imgW)
-			.attr('height', imgH*2.3)
-		//----saturation arc series starts----------------//
-		var satAngleP = ((+data.Sel_sat)/ 80 * Math.PI).toFixed(4);
-		arcSatPicked.endAngle(satAngleP);
-		d3.select('#n'+data.Original_id).select('.satArcP')
-			.attr('d', arcSatPicked)
-
-		arcCenter.endAngle((Math.PI*2).toFixed(4));
-		d3.select('#n'+data.Original_id).select('.satArc')
-			.attr('d', arcCenter)
-
-		var satAngleO = ((+data.Ori_sat)/ 80 * Math.PI).toFixed(4);
-		arcSatOri.endAngle(satAngleO);
-		d3.select('#n'+data.Original_id).select('.satArcO')
-			.attr('d', arcSatOri)
-		//----saturation arc series ends----------------//
-		
-		//----brightness arc series starts----------------//
-		var briAngleP = ((+data.Sel_bri)/ 150 * Math.PI).toFixed(4);
-		arcBriPicked.endAngle(briAngleP);
-		d3.select('#n'+data.Original_id).select('.briArcP')	
-			.attr('d', arcBriPicked)
-
-		d3.select('#n'+data.Original_id).select('.briArc')		
-			.attr('d', arcCenter)
-
-		var briAngleO = ((+data.Ori_bri)/ 150 * Math.PI).toFixed(4);
-		arcBriOri.endAngle(briAngleO);
-		d3.select('#n'+data.Original_id).select('.briArcO')
-			.attr('d', arcBriOri)
-		//----brightness arc series ends----------------//
-
-		//vivider/duller & brighter/darker  text starts ---//
-		d3.select('#n'+data.Original_id).select('.viv_dul')
-			.transition()
-			.style('font-size', imgH/8+'px')
-			.text(function(data){
-				if((+data.Sat_sub) >1) return 'duller';
-				else if((+data.Sat_sub) >= -1) return 'alike';
-				else return 'vivider'; 
-			})
-
-		d3.select('#n'+data.Original_id).select('.bri_dar')
-			.transition()
-			.style('font-size', imgH/8+'px')
-			.text(function(){
-				if((+data.Bri_sub) >1) return 'darker';
-				else if((+data.Bri_sub) >= -1) return 'alike';
-				else return 'brighter'; 
-			})
-
-		//vivider/duller & brighter/darker  text ends ---//
-
-		//------- legend starts------------------//
-		d3.select('#n'+data.Original_id).select('.legend').selectAll('rect')
-			.transition()
-			.attr('width', imgW/2)
-			.attr('height', imgH/5)
-		d3.select('#n'+data.Original_id).select('.legend').selectAll('text')
-			.transition()
-			.style('font-size', imgH/8+'px')
-		//------- legend starts------------------//
-	}
-
-	function infoBoxOut(){
-		//info box!!
-		d3.select('.infoBox')
-			.transition().attr('opacity', 0);
-		
-		//info box background
-		infoBoxBack.transition()
-			.attr('width', 0)
-
-		//Arcs
-		arcSatPicked.startAngle(0).endAngle(0);
-		satArcP.attr('d', arcSatPicked)
-			
-		arcCenter.startAngle(0).endAngle(0)
-		satArc.attr('d', arcCenter)
-			
-		arcSatOri.startAngle(0).endAngle(0);
-		satArcO.attr('d', arcSatOri)
-			
-		arcBriPicked.startAngle(0).endAngle(0);
-		briArcP.attr('d', arcBriPicked)
-			
-		briArc.attr('d', arcCenter)
-			
-		arcBriOri.startAngle(0).endAngle(0);
-		briArcO.attr('d', arcBriOri)
-
-		//vivder, brighter text
-		viv_dul.transition().style('font-size', '0px')
-		bri_dar.transition().style('font-size', '0px')
-		//legend box
-		oriBox
-			.transition().attr('width', 0).attr('height', 0)
-		pickedBox
-			.transition().attr('width', 0).attr('height', 0)
-		legendOriText
-			.transition().style('font-size', '0px')
-		legendPicText
-			.transition().style('font-size', '0px')
-	}
-	
 })
+
+
+
+
+
+
+
+
+
+var items = [
+  { name: '_122', value: 122, aa:'--122'},
+  { name: '_3', value: 3, aa:'--3' },
+  { name: '_52', value: 52, aa:'--52' },
+  { name: '_4.5', value: 4.5, aa:'--4.5' },
+  { name: '_222', value: 222, aa:'--222' },
+  { name: '_12', value: 12, aa:'--12' }
+];
+items.sort(function (a, b) {
+  // if (a.value > b.value) {
+  //   return 1;
+  // }
+  // if (a.value < b.value) {
+  //   return -1;
+  // }
+  // // a must be equal to b
+  // return 0;
+  return a.value - b.value;
+});
+
+console.log(items);
+
 
 
 
