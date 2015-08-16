@@ -90,6 +90,9 @@ d3.csv("data_final_3.csv", function(error, data){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //-------------- button Click starts (changing orders)-------------------------------------------------------//
     d3.select('#sat_sub').on("click", function(){
+  //   	allBool = 	 false;
+		// maleBool = 	 true;
+		// femaleBool = false;
     	sData.sort(function(a,b) {return (+b.Sat_sub)-(+a.Sat_sub);});
 		giveIdNumber();
 		reOrder();
@@ -140,8 +143,22 @@ d3.csv("data_final_3.csv", function(error, data){
 	})
 
 	function giveIdNumber(){
+		var count =0;
 		for(var i =0 ; i < sData.length ; i++){
-	    	sData[i].id = i;
+	    	if(allBool)	 sData[i].id = i;
+
+	    	if(maleBool){		    	
+		    	if(sData[i].sex == 1 ){
+		    		sData[i].id = count;
+		    		count++;	
+		    	}else sData[i].id = i+200;
+	    	}
+	    	if(femaleBool){
+	    		if(sData[i].sex == 2 ){
+		    		sData[i].id = count;
+		    		count++;	
+		    	}else sData[i].id = i+200;
+	    	}
 	    }
 	}
 	function reOrder(){
@@ -633,22 +650,22 @@ function main(mainData){
 
 var items = [
   { name: '_122', value: 122, aa:'--122'},
-  { name: '_3', value: 3, aa:'--3' },
+  { name: '_3', value: 3, aa: 1 },
   { name: '_52', value: 52, aa:'--52' },
   { name: '_4.5', value: 4.5, aa:'--4.5' },
   { name: '_222', value: 222, aa:'--222' },
   { name: '_12', value: 12, aa:'--12' }
 ];
 items.sort(function (a, b) {
-  // if (a.value > b.value) {
-  //   return 1;
-  // }
-  // if (a.value < b.value) {
-  //   return -1;
-  // }
-  // // a must be equal to b
-  // return 0;
-  return a.value - b.value;
+  if (a.value > b.value) {
+    return 1;
+  }
+  if (a.value < b.value) {
+    return -1;
+  }
+  // a must be equal to b
+  return 0;
+  // return a.value - b.value;
 });
 
 console.log(items);
