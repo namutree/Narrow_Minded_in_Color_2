@@ -340,14 +340,14 @@ d3.csv("data_final_3.csv", function(error, data){
 //---------------------front index boxes starts --------------------------------------------------//
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-	main(sData); //????? do I have to do this??
+	// main(sData); //????? do I have to do this??
 
-function main(mainData){
+// function main(mainData){
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //-----------------------creating each column starts--------------------------------------------//
 	// for each collumn
 	eachCollum = uppest.append('g').attr('id','pictures')
-		.selectAll('g').data(mainData)
+		.selectAll('g').data(sData)
 		.enter().append('g')
 			.attr('id', function(d){
 				return 'n'+d.Original_id;
@@ -585,11 +585,115 @@ function main(mainData){
 
 /////////////////////////////////////////////////////////////////////
 //------------- graph starts --------------------------------------//
+	var graph = uppest.append('g')
+		.attr('id','graph')
+		.attr('transform','translate('+imgW+','+h/2+')')
+	var graphW = w/5,
+		graphH = h/3;
+	var graphX_color = d3.scale.linear()
+		.domain([0, 60])
+		.range([0,graphW]);
+	var graphY_color = d3.scale.linear()
+		.domain([40, 100])
+		.range([graphH,0]);
+	var graphX_sub = d3.scale.linear()
+		.domain([-255, 255])
+		.range([0,graphW]);
+	var graphY_sub = d3.scale.linear()
+		.domain([-255, 255])
+		.range([0,graphH]);
 
+
+	var color_graph1 = graph.append('g').attr('transform','translate(0,0)')
+	var color_graph2 = graph.append('g').attr('transform','translate(0,0)')
+	var color_graph1_c = color_graph1.selectAll('circle').data(sData)
+		.enter().append('circle')
+			.attr('id', function(d){
+				return 'sel'+d.Original_id;
+			})
+			.attr('cx', function(d){
+				return graphX_color(d.Sel_sat/255*100);
+			})
+			.attr('cy', function(d){
+				return graphY_color(d.Sel_bri/255*100);
+			})
+			.attr('r', 4)
+			.attr('fill', function(d){
+				if(d.sex==1) return 'rgb(52,188,255)';
+				if(d.sex==2) return 'rgb(231,87,85)';
+			})
+			.attr('opacity', 0.4)
+
+	var color_graph2_c = color_graph2.selectAll('circle').data(sData)
+		.enter().append('circle')
+			.attr('id', function(d){
+				return 'ori'+d.Original_id;
+			})
+			.attr('cx', function(d){
+				return graphX_color(d.Ori_sat/255*100);
+			})
+			.attr('cy', function(d){
+				return graphY_color(d.Ori_bri/255*100);
+			})
+			.attr('r', 4)
+			.attr('fill', function(d){
+				if(d.sex==1) return 'rgb(52,188,255)';
+				if(d.sex==2) return 'rgb(231,87,85)';
+			})
+			.attr('opacity', 0.4)
+
+	var sel_graph = color_graph2.append('circle')
+		.attr('opacity', 0)
+	var ori_graph = color_graph2.append('circle')
+		.attr('opacity', 0)
+	var yAxis_CG = d3.svg.axis()
+		.scale(graphY_color)
+		.orient('left')
+		.ticks(3)
+
+	var yGuide_CG = color_graph1.append('g')
+		yAxis_CG(yGuide_CG)
+		yGuide_CG.selectAll('path')
+			.style({fill:'none', stroke:'white'})
+		yGuide_CG.selectAll('line')
+			.style({stroke:'white'})
+		yGuide_CG.selectAll('text').attr('class', 'tick_text')
+			.style({fill:'white'})
+
+	var xAxis_CG = d3.svg.axis()
+		.scale(graphX_color)
+		.orient('bottom')
+		.ticks(3)
+	var xGuide_CG = color_graph1.append('g')
+		xAxis_CG(xGuide_CG)
+		xGuide_CG.attr('transform','translate(0,'+graphH+')')
+		xGuide_CG.selectAll('path')
+			.style({fill: 'none', stroke: 'white'})
+		xGuide_CG.selectAll('line')
+			.style({stroke: 'white'})
+		xGuide_CG.selectAll('text').attr('class', 'tick_text')
+			.style({fill:'white'})
+
+	color_graph1.append('text')
+		.attr('class', 'graphText')
+		.attr('transform','translate(5,'+(graphH+3)+')')
+		.text('Saturation')
+	color_graph1.append('text')
+		.attr('class', 'graphText2')
+		.attr('transform','translate(-3,'+(graphH-5)+')rotate(90)')
+		.text('Brightness')
+
+
+
+
+
+
+
+	var sub_graph
 //------------- graph ends --------------------------------------//
 ///////////////////////////////////////////////////////////////////
 
-}
+// }
 
 ///////////////////////////////////////////////////////////////////
 //------------- "Mouse over and out" starts----------------------//
@@ -598,39 +702,22 @@ function main(mainData){
 			// console.log(data.Original_id);
 			frontIndexBoxOver();
 
-			// if(!maleBool){
-				imgOver(data);
-				oriBoxOver(data);
-				picBoxOver(data);
-				textInBoxOver(data);
+			imgOver(data);
+			oriBoxOver(data);
+			picBoxOver(data);
+			textInBoxOver(data);
 				
-			// }
-			// if(maleBool){
-			// 	M_imgOver(data);
-			// 	M_oriBoxOver(data);
-			// 	M_picBoxOver(data);
-			// 	M_textInBoxOver(data);
-				
-			// }
 			infoBoxOver(data);
 			
 		})
 		.on('mouseout', function(data){
 			frontIndexBoxOut();
 
-			// if(!maleBool){
-				imgOut();
-				oriBoxOut();
-				picBoxOut();	
-				textInBoxOut();
-			// }
+			imgOut();
+			oriBoxOut();
+			picBoxOut();	
+			textInBoxOut();
 
-			// if(maleBool){
-			// 	M_imgOut(data);
-			// 	M_oriBoxOut();
-			// 	M_picBoxOut();
-			// 	M_textInBoxOut();
-			// }
 			infoBoxOut();
 			
 			
@@ -642,33 +729,6 @@ function main(mainData){
 
 
 
-
-
-
-
-
-
-var items = [
-  { name: '_122', value: 122, aa:'--122'},
-  { name: '_3', value: 3, aa: 1 },
-  { name: '_52', value: 52, aa:'--52' },
-  { name: '_4.5', value: 4.5, aa:'--4.5' },
-  { name: '_222', value: 222, aa:'--222' },
-  { name: '_12', value: 12, aa:'--12' }
-];
-items.sort(function (a, b) {
-  if (a.value > b.value) {
-    return 1;
-  }
-  if (a.value < b.value) {
-    return -1;
-  }
-  // a must be equal to b
-  return 0;
-  // return a.value - b.value;
-});
-
-console.log(items);
 
 
 
