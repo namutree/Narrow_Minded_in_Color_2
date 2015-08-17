@@ -32,7 +32,6 @@ function imgOver(data){
 		.transition()
 		.attr('x', function(d){
 			if(allBool){
-				console.log('here~!')
 				if (+d.id > +data.id) 			return xPos(+d.id) + imgW/2-xPos.rangeBand();
 				else if (+d.id < +data.id) 		return xPos(+d.id) - imgW/2;
 				else 							return xPos(+d.id) - imgW/2;

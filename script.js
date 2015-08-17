@@ -90,9 +90,6 @@ d3.csv("data_final_3.csv", function(error, data){
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //-------------- button Click starts (changing orders)-------------------------------------------------------//
     d3.select('#sat_sub').on("click", function(){
-  //   	allBool = 	 false;
-		// maleBool = 	 true;
-		// femaleBool = false;
     	sData.sort(function(a,b) {return (+b.Sat_sub)-(+a.Sat_sub);});
 		giveIdNumber();
 		reOrder();
@@ -267,6 +264,44 @@ d3.csv("data_final_3.csv", function(error, data){
 				return 'translate('+xxx+','+yyy+')';
 			} )
 
+		//color graph 
+		color_graph1_c
+			.attr('opacity', function(d){
+				if(allBool){
+					return 0.4;
+				}else if(maleBool){
+					if(d.sex == 1) return 0.4;
+					else return 0;
+				}else if(femaleBool){
+					if(d.sex == 2) return 0.4;
+					else return 0;
+				}
+			})
+		color_graph2_c
+			.attr('opacity', function(d){
+				if(allBool){
+					return 0.4;
+				}else if(maleBool){
+					if(d.sex == 1) return 0.4;
+					else return 0;
+				}else if(femaleBool){
+					if(d.sex == 2) return 0.4;
+					else return 0;
+				}
+			}) 
+
+		sub_graph_c
+			.attr('opacity', function(d){
+				if(allBool){
+					return 0.4;
+				}else if(maleBool){
+					if(d.sex == 1) return 0.4;
+					else return 0;
+				}else if(femaleBool){
+					if(d.sex == 2) return 0.4;
+					else return 0;
+				}
+			})
 	}
 	
 //-------------- button Click ends (changing orders)-------------------------------------------------------//
@@ -587,7 +622,7 @@ d3.csv("data_final_3.csv", function(error, data){
 //------------- graph starts --------------------------------------//
 	var graph = uppest.append('g')
 		.attr('id','graph')
-		.attr('transform','translate('+imgW+','+h/2+')')
+		.attr('transform','translate('+imgW/2+','+h/2+')')
 	var graphW = w/5,
 		graphH = h/3;
 	var graphX_color = d3.scale.linear()
@@ -596,14 +631,9 @@ d3.csv("data_final_3.csv", function(error, data){
 	var graphY_color = d3.scale.linear()
 		.domain([40, 100])
 		.range([graphH,0]);
-	var graphX_sub = d3.scale.linear()
-		.domain([-255, 255])
-		.range([0,graphW]);
-	var graphY_sub = d3.scale.linear()
-		.domain([-255, 255])
-		.range([0,graphH]);
 
 
+	// color graph!!
 	var color_graph1 = graph.append('g').attr('transform','translate(0,0)')
 	var color_graph2 = graph.append('g').attr('transform','translate(0,0)')
 	var color_graph1_c = color_graph1.selectAll('circle').data(sData)
@@ -672,9 +702,9 @@ d3.csv("data_final_3.csv", function(error, data){
 	var yGuide_CG = color_graph1.append('g')
 		yAxis_CG(yGuide_CG)
 		yGuide_CG.selectAll('path')
-			.style({fill:'none', stroke:'white'})
+			.style({fill:'none', stroke:'#cccccc'})
 		yGuide_CG.selectAll('line')
-			.style({stroke:'white'})
+			.style({stroke:'#cccccc'})
 		yGuide_CG.selectAll('text').attr('class', 'tick_text')
 			.style({fill:'white'})
 
@@ -686,9 +716,9 @@ d3.csv("data_final_3.csv", function(error, data){
 		xAxis_CG(xGuide_CG)
 		xGuide_CG.attr('transform','translate(0,'+graphH+')')
 		xGuide_CG.selectAll('path')
-			.style({fill: 'none', stroke: 'white'})
+			.style({fill: 'none', stroke: '#cccccc'})
 		xGuide_CG.selectAll('line')
-			.style({stroke: 'white'})
+			.style({stroke: '#cccccc'})
 		xGuide_CG.selectAll('text').attr('class', 'tick_text')
 			.style({fill:'white'})
 
@@ -701,13 +731,73 @@ d3.csv("data_final_3.csv", function(error, data){
 		.attr('transform','translate(-3,'+(graphH-5)+')rotate(90)')
 		.text('Brightness')
 
+	// subtraction graph
+	var graphX_sub = d3.scale.linear()
+		.domain([-80,80])
+		.range([graphW, 0]);
+	var graphY_sub = d3.scale.linear()
+		.domain([-80, 80])
+		.range([0,graphH]);
+
+	var sub_graph = graph.append('g').attr('transform','translate('+(imgW/2 + w/5 + w/20 - imgW/4)+',0)')
+
+	// var rectData = [0,1,2,3]
+	// var sub_graph_Rec = sub_graph.selectAll('rect').data(rectData).enter().append('rect')
+	// 	.attr('class', 'asd')
+	// 	.attr('x', function(d){
+	// 		console.log(d);
+	// 		if (d==0) return 0;
+	// 		if (d==1) return graphW/2;
+	// 		if (d==2) return 0;
+	// 		if (d==3) return graphW/2;
+	// 	})
+	// 	.attr('y', function(d){
+	// 		if (d==0) return 0;
+	// 		if (d==1) return 0;
+	// 		if (d==2) return graphH/2;
+	// 		if (d==3) return graphH/2;
+	// 	})
+	// 	.attr('width',  graphW/2)
+	// 	.attr('height', graphH/2)
+	// 	.attr('fill', function(d,i){
+	// 		if (i==0) return 'rgb(51,51,51)';
+	// 		if (i==1) return 'rgb(77,77,77)';
+	// 		if (i==2) return 'rgb(26,26,26)';
+	// 		if (i==3) return 'rgb(38,38,38)';
+	// 	})
+
+	var sub_graphL_X = sub_graph.append('polyline') 
+		.attr('points', '0,'+graphH/2+' '+graphW+','+graphH/2)
+				.attr('fill', 'none')
+				.attr('stroke', '#cccccc')
+	var sub_graphL_Y = sub_graph.append('polyline') 
+		.attr('points', graphW/2+',0'+' '+graphW/2+','+graphH)
+				.attr('fill', 'none')
+				.attr('stroke', '#cccccc')
+
+	var sub_graph_c = sub_graph.selectAll('circle').data(sData)
+		.enter().append('circle')
+		.attr('cx', function(d){
+			return graphX_sub(+d.Sat_sub);
+		})
+		.attr('cy', function(d){
+			return graphY_sub(+d.Bri_sub);
+		})
+		.attr('r', 4)
+		.attr('fill', function(d){
+			if(d.sex==1) return 'rgb(52,188,255)';
+			if(d.sex==2) return 'rgb(231,87,85)';
+		})
+		.attr('opacity', 0.4)
 
 
+	var sub_graph_indexC = sub_graph.append('circle')
+		.attr('opacity', 0)
+	var sub_graph_indexC2 = sub_graph.append('circle')
+		.attr('opacity', 0)
+	
 
 
-
-
-	var sub_graph
 //------------- graph ends --------------------------------------//
 ///////////////////////////////////////////////////////////////////
 
@@ -794,8 +884,6 @@ d3.csv("data_final_3.csv", function(error, data){
 			var pieX = pie,
 				pieY = pie,
 				extendX = 45;
-			console.log(Math.sin(  Math.PI / 4))
-			console.log(Math.cos(  Math.PI / 4))
 			sel_graphL
 				.attr('points', function(){
 					
@@ -804,20 +892,40 @@ d3.csv("data_final_3.csv", function(error, data){
 
 					return (selX + pieX*6)+','+(selY + pieY*6)+' '+(selX + pieX*24)+','+(selY + pieY*24)+' '+(selX + pieX*24+extendX)+','+(selY + pieY*24);
 				})
-				.attr('opacity', 1)
 				.attr('fill', 'none')
 				.attr('stroke', 'white')
+				.transition()
+				.attr('opacity', 1)
 			sel_graphT
 				.text('Picked')
 				.attr('x',selX + pieX*24+extendX/2)
 				.attr('y',selY + pieY*24)
-				.attr('opacity',1)
+				.transition()
+				.attr('opacity', 1)
 
+			ori_graphL
+				.attr('points', function(){
+					return (oriX - pieX*6)+','+(oriY - pieY*6)+' '+(oriX - pieX*24)+','+(oriY - pieY*24)+' '+(oriX - pieX*24-extendX)+','+(oriY - pieY*24);
+				})
+				.attr('fill', 'none')
+				.attr('stroke', 'white')
+				.transition()
+				.attr('opacity', 1)
+			ori_graphT
+				.text('Original')
+				.attr('x',oriX - pieX*24-extendX/2)
+				.attr('y',oriY - pieY*24)
+				.transition()
+				.attr('opacity', 1)
 
-			
-// frontIndex.append('polyline').attr('class','frontIndexL')
-// 		.attr('points', '5,0 0,0 0,'+(imgH*5/6-2)+' 5,'+(imgH*5/6-2))
-// 		.attr('transform','translate('+FI_X1+','+FI_Y+')')	
+		//subtraction graph
+		sub_graph_indexC
+			.attr('cx', graphX_sub(data.Sat_sub))
+			.attr('cy', graphY_sub(data.Bri_sub))
+			.attr('r', 4)
+			.attr('fill' , 'white')
+				.transition()
+				.attr('opacity', 1)
 
 			
 		})
@@ -851,16 +959,17 @@ d3.csv("data_final_3.csv", function(error, data){
 				.attr('opacity',0)
 			ori_graphC2.transition()
 				.attr('opacity',0)
+			sel_graphL.transition()
+				.attr('opacity',0)
+			sel_graphT.transition()
+				.attr('opacity',0)
+			ori_graphL.transition()
+				.attr('opacity',0)
+			ori_graphT.transition()
+				.attr('opacity',0)
 		})
 //------------- "Mouse over and out" ends-------------------------------//
 ///////////////////////////////////////////////////////////////////////////
 
 })
-
-
-
-
-
-
-
 
