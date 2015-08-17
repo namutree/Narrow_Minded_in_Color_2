@@ -741,31 +741,6 @@ d3.csv("data_final_3.csv", function(error, data){
 
 	var sub_graph = graph.append('g').attr('transform','translate('+(imgW/2 + w/5 + w/20 - imgW/4)+',0)')
 
-	// var rectData = [0,1,2,3]
-	// var sub_graph_Rec = sub_graph.selectAll('rect').data(rectData).enter().append('rect')
-	// 	.attr('class', 'asd')
-	// 	.attr('x', function(d){
-	// 		console.log(d);
-	// 		if (d==0) return 0;
-	// 		if (d==1) return graphW/2;
-	// 		if (d==2) return 0;
-	// 		if (d==3) return graphW/2;
-	// 	})
-	// 	.attr('y', function(d){
-	// 		if (d==0) return 0;
-	// 		if (d==1) return 0;
-	// 		if (d==2) return graphH/2;
-	// 		if (d==3) return graphH/2;
-	// 	})
-	// 	.attr('width',  graphW/2)
-	// 	.attr('height', graphH/2)
-	// 	.attr('fill', function(d,i){
-	// 		if (i==0) return 'rgb(51,51,51)';
-	// 		if (i==1) return 'rgb(77,77,77)';
-	// 		if (i==2) return 'rgb(26,26,26)';
-	// 		if (i==3) return 'rgb(38,38,38)';
-	// 	})
-
 	var sub_graphL_X = sub_graph.append('polyline') 
 		.attr('points', '0,'+graphH/2+' '+graphW+','+graphH/2)
 				.attr('fill', 'none')
@@ -774,6 +749,27 @@ d3.csv("data_final_3.csv", function(error, data){
 		.attr('points', graphW/2+',0'+' '+graphW/2+','+graphH)
 				.attr('fill', 'none')
 				.attr('stroke', '#cccccc')
+	var sub_graph_T = sub_graph.append('g').attr('class','graphText')
+	sub_graph_T.append('text')
+		.text('Vivider')
+		.attr('transform', 'translate('+(graphW+2)+','+graphH/2+')')
+		.style('dominant-baseline', 'central')
+	sub_graph_T.append('text')
+		.text('Duller')
+		.attr('transform', 'translate('+(-2)+','+graphH/2+')')
+		.style('dominant-baseline', 'central')
+		.style('text-anchor', 'end')
+	sub_graph_T.append('text')
+		.text('Brighter')
+		.attr('transform', 'translate('+(graphW/2)+','+(-8)+')')
+		.style('dominant-baseline', 'central')
+		.style('text-anchor', 'middle')
+	sub_graph_T.append('text')
+		.text('Darker')
+		.attr('transform', 'translate('+(graphW/2)+','+(graphH+8)+')')
+		.style('dominant-baseline', 'central')
+		.style('text-anchor', 'middle')
+
 
 	var sub_graph_c = sub_graph.selectAll('circle').data(sData)
 		.enter().append('circle')
@@ -792,12 +788,8 @@ d3.csv("data_final_3.csv", function(error, data){
 
 
 	var sub_graph_indexC = sub_graph.append('circle')
+		.attr('r', 4)
 		.attr('opacity', 0)
-	var sub_graph_indexC2 = sub_graph.append('circle')
-		.attr('opacity', 0)
-	
-
-
 //------------- graph ends --------------------------------------//
 ///////////////////////////////////////////////////////////////////
 
@@ -919,13 +911,36 @@ d3.csv("data_final_3.csv", function(error, data){
 				.attr('opacity', 1)
 
 		//subtraction graph
+		sub_graph_c
+			.transition()
+			.duration(400)
+			.ease("linear")
+			.attr('r',3)
+			.attr('opacity', function(d){
+
+				if(allBool){
+					return 0.3;
+				}else if(maleBool){
+					if(d.sex == 1) return 0.3;
+					else return 0;
+				}else if(femaleBool){
+					if(d.sex == 2) return 0.3;
+					else return 0;
+				}	
+			})
+
 		sub_graph_indexC
 			.attr('cx', graphX_sub(data.Sat_sub))
 			.attr('cy', graphY_sub(data.Bri_sub))
-			.attr('r', 4)
-			.attr('fill' , 'white')
-				.transition()
-				.attr('opacity', 1)
+			.attr('fill', function(d){
+				if(data.sex==1) return 'rgb(52,188,255)';
+				if(data.sex==2) return 'rgb(231,87,85)';
+			})
+			.transition()
+			.duration(400)
+			.ease("linear")
+			.attr('r', 6)
+			.attr('opacity', 1)
 
 			
 		})
@@ -967,6 +982,27 @@ d3.csv("data_final_3.csv", function(error, data){
 				.attr('opacity',0)
 			ori_graphT.transition()
 				.attr('opacity',0)
+
+			sub_graph_c.transition()
+				.duration(400)
+				.ease("linear")
+				.attr('r',4)
+				.attr('opacity', function(d){
+				if(allBool){
+					return 0.4;
+				}else if(maleBool){
+					if(d.sex == 1) return 0.4;
+					else return 0;
+				}else if(femaleBool){
+					if(d.sex == 2) return 0.4;
+					else return 0;
+				}	
+			})
+
+			sub_graph_indexC.transition()
+				.duration(400)
+				.ease("linear")
+				.attr('opacity', 0)
 		})
 //------------- "Mouse over and out" ends-------------------------------//
 ///////////////////////////////////////////////////////////////////////////

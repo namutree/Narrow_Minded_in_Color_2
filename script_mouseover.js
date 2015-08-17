@@ -2,7 +2,7 @@
 function frontIndexBoxOver(){
 	d3.select('.right_Br')
 		.transition()
-		.attr('transform', 'translate('+(-imgW/2)+',0)')
+		.attr('transform', 'translate('+(-imgW*3/4+12)+',0)')
 	d3.selectAll('.frontIndexT')
 		.transition()
 		.attr('opacity', 0)
