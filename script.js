@@ -642,10 +642,26 @@ d3.csv("data_final_3.csv", function(error, data){
 			})
 			.attr('opacity', 0.4)
 
-	var sel_graph = color_graph2.append('circle')
+	var sel_graph  = color_graph2.append('g')
+	var sel_graphC = sel_graph.append('circle')
 		.attr('opacity', 0)
-	var ori_graph = color_graph2.append('circle')
+	var sel_graphC2 = sel_graph.append('circle')
 		.attr('opacity', 0)
+	var sel_graphL = sel_graph.append('polyline')
+		.attr('opacity', 0)
+	var sel_graphT = sel_graph.append('text')
+		.attr('opacity', 0)
+
+	var ori_graph  = color_graph2.append('g')
+	var ori_graphC = ori_graph.append('circle')
+		.attr('opacity', 0)
+	var ori_graphC2 = ori_graph.append('circle')
+		.attr('opacity', 0)
+	var ori_graphL = ori_graph.append('polyline')
+		.attr('opacity', 0)
+	var ori_graphT = ori_graph.append('text')
+		.attr('opacity', 0)	
+
 	var yAxis_CG = d3.svg.axis()
 		.scale(graphY_color)
 		.orient('left')
@@ -708,6 +724,85 @@ d3.csv("data_final_3.csv", function(error, data){
 			textInBoxOver(data);
 				
 			infoBoxOver(data);
+
+			// console.log(data)
+
+			color_graph1_c.transition()
+				.attr('fill', 'grey')
+			color_graph2_c.transition()
+				.attr('fill', 'grey')
+
+			var selX = graphX_color(data.Sel_sat/255*100),
+				selY = graphY_color(data.Sel_bri/255*100);
+			var oriX = graphX_color(data.Ori_sat/255*100),
+				oriY = graphY_color(data.Ori_bri/255*100);
+
+			sel_graphC
+				.attr('cx', function(){
+					return selX;
+				})
+				.attr('cy', function(){
+					return selY;
+				})
+				.attr('r', 4)
+				.transition()
+				.attr('opacity', 1)
+				.attr('fill', function(){
+					return 'rgb('+data.Sel_r+','+data.Sel_g+','+data.Sel_b+')';
+				})
+			sel_graphC2
+				.attr('cx', function(){
+					return selX;
+				})
+				.attr('cy', function(){
+					return selY;
+				})
+				.attr('r', 6)
+				.transition()
+				.attr('opacity', 1)
+				.attr('fill', 'none')
+				.attr('stroke', 'white')
+			ori_graphC
+				.attr('cx', function(){
+					return oriX;
+				})
+				.attr('cy', function(){
+					return oriY;
+				})
+				.attr('r', 4)
+				.transition()
+				.attr('opacity', 1)
+				.attr('fill', function(){
+					return 'rgb('+data.Ori_r+','+data.Ori_g+','+data.Ori_b+')';
+				})
+			ori_graphC2
+				.attr('cx', function(){
+					return oriX;
+				})
+				.attr('cy', function(){
+					return oriY;
+				})
+				.attr('r', 6)
+				.transition()
+				.attr('opacity', 1)
+				.attr('fill', 'none')
+				.attr('stroke', 'white')
+			sel_graphL
+				.attr('points', function(){
+					var pie = Math.sin(Math.PI / 4);
+					return (selX + pie*6)+','+(selY + pie*6)+' '+(selX + pie*24)+','+(selY + pie*24)+' '+(selX + pie*24+45)+','+(selY + pie*24);
+				})
+				.attr('opacity', 1)
+				.attr('fill', 'none')
+				.attr('stroke', 'white')
+			// sel_graphT
+				
+
+			
+// frontIndex.append('polyline').attr('class','frontIndexL')
+// 		.attr('points', '5,0 0,0 0,'+(imgH*5/6-2)+' 5,'+(imgH*5/6-2))
+// 		.attr('transform','translate('+FI_X1+','+FI_Y+')')	
+
 			
 		})
 		.on('mouseout', function(data){
@@ -720,7 +815,26 @@ d3.csv("data_final_3.csv", function(error, data){
 
 			infoBoxOut();
 			
-			
+
+			color_graph1_c.transition()
+				.attr('fill', function(d){
+					if(d.sex==1) return 'rgb(52,188,255)';
+					if(d.sex==2) return 'rgb(231,87,85)';
+				})
+			color_graph2_c.transition()
+				.attr('fill', function(d){
+					if(d.sex==1) return 'rgb(52,188,255)';
+					if(d.sex==2) return 'rgb(231,87,85)';
+				})
+
+			sel_graphC.transition()
+				.attr('opacity',0)
+			sel_graphC2.transition()
+				.attr('opacity',0)
+			ori_graphC.transition()
+				.attr('opacity',0)
+			ori_graphC2.transition()
+				.attr('opacity',0)
 		})
 //------------- "Mouse over and out" ends-------------------------------//
 ///////////////////////////////////////////////////////////////////////////
