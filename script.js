@@ -650,6 +650,7 @@ d3.csv("data_final_3.csv", function(error, data){
 	var sel_graphL = sel_graph.append('polyline')
 		.attr('opacity', 0)
 	var sel_graphT = sel_graph.append('text')
+		.attr('class', 'graph_legendT')
 		.attr('opacity', 0)
 
 	var ori_graph  = color_graph2.append('g')
@@ -660,6 +661,7 @@ d3.csv("data_final_3.csv", function(error, data){
 	var ori_graphL = ori_graph.append('polyline')
 		.attr('opacity', 0)
 	var ori_graphT = ori_graph.append('text')
+		.attr('class', 'graph_legendT')
 		.attr('opacity', 0)	
 
 	var yAxis_CG = d3.svg.axis()
@@ -728,9 +730,9 @@ d3.csv("data_final_3.csv", function(error, data){
 			// console.log(data)
 
 			color_graph1_c.transition()
-				.attr('fill', 'grey')
+				.attr('fill', '#555555')
 			color_graph2_c.transition()
-				.attr('fill', 'grey')
+				.attr('fill', '#555555')
 
 			var selX = graphX_color(data.Sel_sat/255*100),
 				selY = graphY_color(data.Sel_bri/255*100);
@@ -787,16 +789,30 @@ d3.csv("data_final_3.csv", function(error, data){
 				.attr('opacity', 1)
 				.attr('fill', 'none')
 				.attr('stroke', 'white')
+
+			var pie = Math.sin( Math.PI / 4);
+			var pieX = pie,
+				pieY = pie,
+				extendX = 45;
+			console.log(Math.sin(  Math.PI / 4))
+			console.log(Math.cos(  Math.PI / 4))
 			sel_graphL
 				.attr('points', function(){
-					var pie = Math.sin(Math.PI / 4);
-					return (selX + pie*6)+','+(selY + pie*6)+' '+(selX + pie*24)+','+(selY + pie*24)+' '+(selX + pie*24+45)+','+(selY + pie*24);
+					
+					if( selX < oriX ) {pieX = -pieX; extendX= -extendX;}
+					if( selY < oriY ) pieY = - pieY;
+
+					return (selX + pieX*6)+','+(selY + pieY*6)+' '+(selX + pieX*24)+','+(selY + pieY*24)+' '+(selX + pieX*24+extendX)+','+(selY + pieY*24);
 				})
 				.attr('opacity', 1)
 				.attr('fill', 'none')
 				.attr('stroke', 'white')
-			// sel_graphT
-				
+			sel_graphT
+				.text('Picked')
+				.attr('x',selX + pieX*24+extendX/2)
+				.attr('y',selY + pieY*24)
+				.attr('opacity',1)
+
 
 			
 // frontIndex.append('polyline').attr('class','frontIndexL')

@@ -112,6 +112,15 @@ legend{
 	font-size: 0.2em;
 	fill: white;
 }
+.graph_legendT{
+	font-family: 'roboto', san-serif;
+	font-weight: 400;
+	text-anchor: middle;
+	dominant-baseline: ideographic;
+	font-size: 0.7em;
+	fill: white;
+}
+
 
 /*radio button design*/
 
