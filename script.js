@@ -786,10 +786,94 @@ d3.csv("data_final_3.csv", function(error, data){
 		})
 		.attr('opacity', 0.4)
 
-
 	var sub_graph_indexC = sub_graph.append('circle')
 		.attr('r', 4)
 		.attr('opacity', 0)
+
+	//PIE Chart//
+	var m_brighter=0, m_bri_alike=0, m_darker=0,
+		m_vivider=0,  m_sat_alike=0, m_duller=0,
+		f_brighter=0, f_bri_alike=0, f_darker=0,
+		f_vivider=0,  f_sat_alike=0, f_duller=0;
+
+	for(var i=0 ; i <sData.length ; i++){
+
+		
+		if((sData[i].Sat_sub) >1) {
+			if(sData[i].sex ==1) m_duller++;
+			else f_duller++;
+		}else if((sData[i].Sat_sub) >= -1) {
+			if(sData[i].sex ==1) m_sat_alike++;
+			else f_sat_alike++;
+		}else {
+			if(sData[i].sex ==1) m_vivider++;
+			else f_vivider++;
+		}
+
+		if((sData[i].Bri_sub) >1) {
+			console.log("adfadf");
+			if(sData[i].sex ==1) m_darker++;
+			else f_darker++;
+		}else if((sData[i].Bri_sub) >= -1){
+			if(sData[i].sex ==1) m_bri_alike++;
+			else f_bri_alike++;	
+		}else {
+			if(sData[i].sex ==1) m_brighter++;
+			else f_brighter++;
+		}  
+	}
+	console.log(m_brighter, m_bri_alike, m_darker,
+		m_vivider,  m_sat_alike, m_duller,
+		f_brighter, f_bri_alike, f_darker,
+		f_vivider,  f_sat_alike, f_duller)
+	var m_brightness = [m_brighter, m_bri_alike, m_darker];
+	// var m_brightness = [1,2,3];
+	var f_brightness = [f_brighter, f_bri_alike, f_darker];
+	var m_saturation = [m_vivider,  m_sat_alike, m_duller];
+	var f_saturation = [f_vivider,  f_sat_alike, f_duller];
+	// var graphW = w/5,
+		// graphH = h/3;
+
+	console.log(m_brightness)
+	console.log(f_brightness)
+	var pie = d3.layout.pie()
+	    .value(function(da) {
+	        return da;
+	    })
+colors = d3.scale.ordinal()
+                .range(['#595AB7','#A57706','#D11C24','#C61C6F','#BD3613','#2176C7','#259286','#738A05'])
+
+	var maleRaius = w/10;
+	var arcM = d3.svg.arc()
+		// .outerRadius(200)
+	    .outerRadius(w/10)
+	    .innerRadius(maleRaius-20)
+	    // .startAngle(0)
+   	var arcF = d3.svg.arc()
+	    .outerRadius(maleRaius-20)
+	    .innerRadius(maleRaius-40)
+
+	var bri_arcM = graph.append('g').attr('transform', 'translate(800,100)')
+		.selectAll('path').data(pie(m_brightness))
+		.enter().append('g')
+	bri_arcM.append('path')
+		.attr('fill', function(d, i) {
+			console.log(d)
+            return colors(i);
+        })
+		.attr('d', arcM)
+		.attr('class','mam')
+
+	var bri_arcF = graph.append('g').attr('transform', 'translate(800,100)')
+		.selectAll('path').data(pie(f_brightness))
+		.enter().append('g')
+	bri_arcF.append('path')
+		.attr('fill', function(d, i) {
+            console.log(d)
+            return colors(i);
+        })
+		.attr('d', arcF)
+		.attr('class','wo')		
 //------------- graph ends --------------------------------------//
 ///////////////////////////////////////////////////////////////////
 
