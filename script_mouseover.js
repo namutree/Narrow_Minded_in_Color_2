@@ -278,6 +278,7 @@ function infoBoxOver(data){
 	d3.select('#n'+data.Original_id).select('.infoBox').transition().attr('opacity', 1);
 	//infobox background
 	d3.select('#n'+data.Original_id).select('.infoBoxBack')
+		.transition()
 		.attr('width', imgW)
 		.attr('height', imgH*2.3)
 	//----saturation arc series starts----------------//

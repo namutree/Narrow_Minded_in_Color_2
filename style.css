@@ -120,7 +120,14 @@ legend{
 	font-size: 0.7em;
 	fill: white;
 }
-
+.arcGraphT{
+	font-family: 'roboto', san-serif;
+	font-weight: 100;
+	text-anchor: middle;
+	font-size: 1em;
+	dominant-baseline: central;
+	fill: white;
+}
 
 /*radio button design*/
 

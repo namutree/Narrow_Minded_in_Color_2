@@ -622,7 +622,7 @@ d3.csv("data_final_3.csv", function(error, data){
 //------------- graph starts --------------------------------------//
 	var graph = uppest.append('g')
 		.attr('id','graph')
-		.attr('transform','translate('+imgW/2+','+h/2+')')
+		.attr('transform','translate('+w/25+','+h/2+')')
 	var graphW = w/5,
 		graphH = h/3;
 	var graphX_color = d3.scale.linear()
@@ -739,7 +739,7 @@ d3.csv("data_final_3.csv", function(error, data){
 		.domain([-80, 80])
 		.range([0,graphH]);
 
-	var sub_graph = graph.append('g').attr('transform','translate('+(imgW/2 + w/5 + w/20 - imgW/4)+',0)')
+	var sub_graph = graph.append('g').attr('transform','translate('+(w*6/25)+',0)')
 
 	var sub_graphL_X = sub_graph.append('polyline') 
 		.attr('points', '0,'+graphH/2+' '+graphW+','+graphH/2)
@@ -809,9 +809,7 @@ d3.csv("data_final_3.csv", function(error, data){
 			if(sData[i].sex ==1) m_vivider++;
 			else f_vivider++;
 		}
-
 		if((sData[i].Bri_sub) >1) {
-			console.log("adfadf");
 			if(sData[i].sex ==1) m_darker++;
 			else f_darker++;
 		}else if((sData[i].Bri_sub) >= -1){
@@ -822,58 +820,82 @@ d3.csv("data_final_3.csv", function(error, data){
 			else f_brighter++;
 		}  
 	}
-	console.log(m_brighter, m_bri_alike, m_darker,
-		m_vivider,  m_sat_alike, m_duller,
-		f_brighter, f_bri_alike, f_darker,
-		f_vivider,  f_sat_alike, f_duller)
+
 	var m_brightness = [m_brighter, m_bri_alike, m_darker];
-	// var m_brightness = [1,2,3];
 	var f_brightness = [f_brighter, f_bri_alike, f_darker];
 	var m_saturation = [m_vivider,  m_sat_alike, m_duller];
 	var f_saturation = [f_vivider,  f_sat_alike, f_duller];
-	// var graphW = w/5,
-		// graphH = h/3;
-
-	console.log(m_brightness)
-	console.log(f_brightness)
+	
 	var pie = d3.layout.pie()
 	    .value(function(da) {
 	        return da;
-	    })
-colors = d3.scale.ordinal()
-                .range(['#595AB7','#A57706','#D11C24','#C61C6F','#BD3613','#2176C7','#259286','#738A05'])
+	    }).sort(null)
+	colorsM = d3.scale.ordinal()
+        .range(['#2fbdfe','#299ecb','#99e7fe'])
+   	colorsF = d3.scale.ordinal()
+        .range(['#e65c59','#be4d4c','#e48b8b'])
 
-	var maleRaius = w/10;
+	var maleRaius = w/12;
 	var arcM = d3.svg.arc()
-		// .outerRadius(200)
-	    .outerRadius(w/10)
+	    .outerRadius(maleRaius)
 	    .innerRadius(maleRaius-20)
-	    // .startAngle(0)
    	var arcF = d3.svg.arc()
-	    .outerRadius(maleRaius-20)
-	    .innerRadius(maleRaius-40)
+	    .outerRadius(maleRaius-19)
+	    .innerRadius(maleRaius-39)
 
-	var bri_arcM = graph.append('g').attr('transform', 'translate(800,100)')
+	var arcGraph = graph.append('g').attr('id', 'arcGraph');
+
+	var bri_arcM = arcGraph.append('g').attr('transform', 'translate('+(w*29/50)+','+graphH/2+')rotate(-45)')
 		.selectAll('path').data(pie(m_brightness))
 		.enter().append('g')
 	bri_arcM.append('path')
 		.attr('fill', function(d, i) {
 			console.log(d)
-            return colors(i);
+            return colorsM(i);
         })
 		.attr('d', arcM)
-		.attr('class','mam')
+		.attr('class','man')
 
-	var bri_arcF = graph.append('g').attr('transform', 'translate(800,100)')
+	var bri_arcF = arcGraph.append('g').attr('transform', 'translate('+(w*29/50)+','+graphH/2+')rotate(-45)')
 		.selectAll('path').data(pie(f_brightness))
 		.enter().append('g')
 	bri_arcF.append('path')
 		.attr('fill', function(d, i) {
             console.log(d)
-            return colors(i);
+            return colorsF(i);
         })
 		.attr('d', arcF)
-		.attr('class','wo')		
+		.attr('class','wo')
+
+	var bri_arcTB = arcGraph.append('text')
+		.attr('class','arcGraphT')
+		.attr('transform', 'translate('+(w*29/50)+','+graphH/2+')')
+		.text('Brightness')
+
+	var sat_arcM = arcGraph.append('g').attr('transform', 'translate('+(w*41/50)+','+graphH/2+')rotate(-45)')
+		.selectAll('path').data(pie(m_saturation))
+		.enter().append('g')
+	sat_arcM.append('path')
+		.attr('fill', function(d, i) {
+            return colorsM(i);
+        })
+		.attr('d', arcM)
+		.attr('class','man')
+
+	var sat_arcF = arcGraph.append('g').attr('transform', 'translate('+(w*41/50)+','+graphH/2+')rotate(-45)')
+		.selectAll('path').data(pie(f_saturation))
+		.enter().append('g')
+	sat_arcF.append('path')
+		.attr('fill', function(d, i) {
+            return colorsF(i);
+        })
+		.attr('d', arcF)
+		.attr('class','wo')
+	var sat_arcT = arcGraph.append('text')
+		.attr('class','arcGraphT')
+		.attr('transform', 'translate('+(w*41/50)+','+graphH/2+')')
+		.text('Saturation')
+
 //------------- graph ends --------------------------------------//
 ///////////////////////////////////////////////////////////////////
 
