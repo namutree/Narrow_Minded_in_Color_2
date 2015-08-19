@@ -831,9 +831,9 @@ d3.csv("data_final_3.csv", function(error, data){
 	        return da;
 	    }).sort(null)
 	colorsM = d3.scale.ordinal()
-        .range(['#2fbdfe','#299ecb','#99e7fe'])
+        .range(['#99e7fe', '#2fbdfe', '#299ecb'])
    	colorsF = d3.scale.ordinal()
-        .range(['#e65c59','#be4d4c','#e48b8b'])
+        .range(['#e48b8b', '#e65c59', '#be4d4c'])
 
 	var maleRaius = w/12;
 	var arcM = d3.svg.arc()
@@ -900,6 +900,21 @@ d3.csv("data_final_3.csv", function(error, data){
 ///////////////////////////////////////////////////////////////////
 
 // }
+
+// graph on////////
+d3.select('#graph').selectAll('path')
+	.on("mouseover", function(datum){
+		console.log(datum);
+		d3.select(this).transition().attr('opacity', 0.7)
+		// d3.selectAll('path').attr('opacity',0);
+		//가운데 또는 위에 또는 아래 옆에다가 
+		//M brighter 75%
+		//F vivider 55%
+	})
+	.on('mouseout', function(datum){
+		d3.select(this).transition().attr('opacity', 1)
+	})
+// /////////////////
 
 ///////////////////////////////////////////////////////////////////
 //------------- "Mouse over and out" starts----------------------//
