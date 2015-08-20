@@ -848,7 +848,7 @@ d3.csv("data_final_3.csv", function(error, data){
 	var bri_arcM = arcGraph.append('g').attr('transform', 'translate('+(w*29/50)+','+graphH/2+')rotate(-45)')
 		.selectAll('path').data(pie(m_brightness))
 		.enter().append('g')
-	bri_arcM.append('path')
+	var bri_arcMM = bri_arcM.append('path')
 		.attr('fill', function(d, i) {
 			console.log(d)
             return colorsM(i);
@@ -881,6 +881,9 @@ d3.csv("data_final_3.csv", function(error, data){
         })
 		.attr('d', arcM)
 		.attr('class','man')
+		.attr('id', function(d,i){
+			return 'sat'+i;
+		})
 
 	var sat_arcF = arcGraph.append('g').attr('transform', 'translate('+(w*41/50)+','+graphH/2+')rotate(-45)')
 		.selectAll('path').data(pie(f_saturation))
@@ -895,24 +898,58 @@ d3.csv("data_final_3.csv", function(error, data){
 		.attr('class','arcGraphT')
 		.attr('transform', 'translate('+(w*41/50)+','+graphH/2+')')
 		.text('Saturation')
-
+	var sat_artT1 = arcGraph.append('text')
+		.attr('class','arcGraphT')
+		.attr('transform', 'translate('+(w*41/50)+','+(graphH/2-20)+')')
+		.text('')
+	var sat_artT2 = arcGraph.append('text')
+		.attr('class','arcGraphT')
+		.attr('transform', 'translate('+(w*41/50)+','+(graphH/2+20)+')')
+		.text('')
 //------------- graph ends --------------------------------------//
 ///////////////////////////////////////////////////////////////////
 
 // }
+
+
+// var ttt = bri_arcM.append('text')
+// 	.text('adfad').attr('class','arcGraphT').attr('transform', 'translate('+(0)+','+30+')rotate(45)')
 
 // graph on////////
 d3.select('#graph').selectAll('path')
 	.on("mouseover", function(datum){
 		console.log(datum);
 		d3.select(this).transition().attr('opacity', 0.7)
+		var cl = d3.select(this).attr('class');
+		var idd = d3.select(this).attr('id') 
+		if (cl == 'man'){
+			if (idd == 'sat0') {
+				sat_artT1.text('male').transition().attr('opacity', 1)
+				sat_arcT.text('Vivider').transition().attr('opacity', 1); 	
+				sat_artT2.text( Math.round(43/male*1000)/10+'%').transition().attr('opacity', 1);
+			} else if (idd == 'sat1') {
+				sat_artT1.text('male').transition().attr('opacity', 1)
+				sat_arcT.text('Alike').transition().attr('opacity', 1); 	
+				sat_artT2.text( Math.round(11/male*1000)/10+'%').transition().attr('opacity', 1);
+			}else if (idd == 'sat2') {
+				sat_artT1.text('male').transition().attr('opacity', 1)
+				sat_arcT.text('Duller').transition().attr('opacity', 1); 	
+				sat_artT2.text( Math.round(42/male*1000)/10+'%').transition().attr('opacity', 1);
+			}
+			
+		} else{
+			sat_artT1.text('female')
+		}
 		// d3.selectAll('path').attr('opacity',0);
 		//가운데 또는 위에 또는 아래 옆에다가 
-		//M brighter 75%
+		//M brighter 75% or 75% M chose brighter 
+		//75% M brighter
 		//F vivider 55%
 	})
 	.on('mouseout', function(datum){
 		d3.select(this).transition().attr('opacity', 1)
+		sat_artT1.transition().attr('opacity', 0);
+		sat_artT2.transition().attr('opacity', 0);
 	})
 // /////////////////
 
