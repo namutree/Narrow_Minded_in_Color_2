@@ -135,14 +135,30 @@ input[type=radio]{
 	display: none;
 	margin: 10px;
 }
-input[type=radio] + label {
+.sex {
+	margin: 0px 5px 0px 0px;
+}
+.sex input[type=radio] + label {
 	display: inline-block;
-	margin: -2px;
+	margin: 2px -2px;
 	padding: 4px 12px;
 	background-color: #949399;
 	border-color: #ddd;
 }
-input[type=radio]:checked + label{
+.sex input[type=radio]:checked + label{
 	background-image: none;
 	background-color: #67B2AE;
+}
+
+.order input[type=radio] + label {
+	display: inline-block;
+	margin: 2px -2px;
+	padding: 4px 12px;
+	background-color: #949399;
+	border-color: #ddd;
+}
+
+.order input[type=radio]:checked + label{
+	background-image: none;
+	background-color: #ff8701;
 }
