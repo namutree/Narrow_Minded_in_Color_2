@@ -2,7 +2,7 @@ body{
 	background: black;
 }
 #title{
-	margin: 15px 20px;
+	margin: 14px 18px;
 	color: white;
 	font-family: 'roboto', san-serif;
 	font-weight: 900;
@@ -132,7 +132,7 @@ legend{
 
 /*radio button design*/
 
-input[type=radio]{
+.sex input[type=radio]{
 	display: none;
 	margin: 10px;
 }
@@ -151,7 +151,7 @@ input[type=radio]{
 	background-color: #67B2AE;
 }
 
-.order input[type=radio] + label {
+/*.order input[type=radio] + label {
 	display: inline-block;
 	margin: 2px -2px;
 	padding: 4px 12px;
@@ -162,4 +162,33 @@ input[type=radio]{
 .order input[type=radio]:checked + label{
 	background-image: none;
 	background-color: #ff8701;
+}*/
+
+.order input[type=radio] {
+	position:absolute; z-index:-1000; left:-1000px; overflow: hidden; clip: rect(0 0 0 0); height:1px; width:1px; margin:-1px; padding:0; border:0;
+}
+
+.order input[type=radio] + label {
+	padding-left:21px;
+	height:16px; 
+	display:inline-block;
+	line-height:16px;
+	background-repeat:no-repeat;
+	background-position: 0 0;
+	vertical-align:middle;
+	cursor:pointer;
+
+}
+
+.order input[type=radio]:checked + label {
+	background-position: 0 -16px;
+}
+.order label {
+	background-image:url(radioBtn.png);
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
