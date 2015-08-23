@@ -830,15 +830,16 @@ d3.csv("data_final_3.csv", function(error, data){
 	    .value(function(da) {
 	        return da;
 	    }).sort(null)
-	colorsM = d3.scale.ordinal()
-        .range(['#99e7fe', '#2fbdfe', '#299ecb'])
-   	colorsF = d3.scale.ordinal()
-        .range(['#e48b8b', '#e65c59', '#be4d4c'])
+	var colorsM = d3.scale.ordinal()
+        .range(['#c4f3ff', '#58abc6', '#70d5ff'])
+   	var colorsF = d3.scale.ordinal()
+        .range(['#dfadac', '#b56766', '#e37f7e'])
 
 	var maleRaius = w/12;
 	var arcM = d3.svg.arc()
 	    .outerRadius(maleRaius)
 	    .innerRadius(maleRaius-20)
+
    	var arcF = d3.svg.arc()
 	    .outerRadius(maleRaius-19)
 	    .innerRadius(maleRaius-39)
@@ -855,6 +856,9 @@ d3.csv("data_final_3.csv", function(error, data){
         })
 		.attr('d', arcM)
 		.attr('class','man')
+		.attr('id', function(d,i){
+			return 'bri'+i;
+		})
 
 	var bri_arcF = arcGraph.append('g').attr('transform', 'translate('+(w*29/50)+','+graphH/2+')rotate(-45)')
 		.selectAll('path').data(pie(f_brightness))
@@ -866,11 +870,21 @@ d3.csv("data_final_3.csv", function(error, data){
         })
 		.attr('d', arcF)
 		.attr('class','wo')
+		.attr('id', function(d,i){
+			return 'briF'+i;
+		})
 
-	var bri_arcTB = arcGraph.append('text')
+
+	var bri_arcT = arcGraph.append('text')
 		.attr('class','arcGraphT')
 		.attr('transform', 'translate('+(w*29/50)+','+graphH/2+')')
 		.text('Brightness')
+	var bri_artT1 = arcGraph.append('text')
+		.attr('class','arcGraphT')
+		.attr('transform', 'translate('+(w*29/50)+','+(graphH/2-20)+')')
+	var bri_artT2 = arcGraph.append('text')
+		.attr('class','arcGraphT')
+		.attr('transform', 'translate('+(w*29/50)+','+(graphH/2+20)+')')
 
 	var sat_arcM = arcGraph.append('g').attr('transform', 'translate('+(w*41/50)+','+graphH/2+')rotate(-45)')
 		.selectAll('path').data(pie(m_saturation))
@@ -894,6 +908,9 @@ d3.csv("data_final_3.csv", function(error, data){
         })
 		.attr('d', arcF)
 		.attr('class','wo')
+		.attr('id', function(d,i){
+			return 'satF'+i;
+		})
 	var sat_arcT = arcGraph.append('text')
 		.attr('class','arcGraphT')
 		.attr('transform', 'translate('+(w*41/50)+','+graphH/2+')')
@@ -901,56 +918,190 @@ d3.csv("data_final_3.csv", function(error, data){
 	var sat_artT1 = arcGraph.append('text')
 		.attr('class','arcGraphT')
 		.attr('transform', 'translate('+(w*41/50)+','+(graphH/2-20)+')')
-		.text('')
 	var sat_artT2 = arcGraph.append('text')
 		.attr('class','arcGraphT')
 		.attr('transform', 'translate('+(w*41/50)+','+(graphH/2+20)+')')
-		.text('')
+	// var arc_legend = arcGraph.append('g')
+	// 	.attr('id', 'arc_legend')
+	// 	.attr('opacity', 1)
+	// 	.attr('x', 1000)
+	// var AL_w = 50,
+	// 	AL_h = 50;
+	// var arc_legend_B = arc_legend.append('rect')
+	// 	// rx="20" ry="20" width="150" height="150"
+	// 	.attr('rx' , '5')
+	// 	.attr('ry' , '5')
+	// 	.attr('width' , AL_w)
+	// 	.attr('height' , AL_h)
+	// 	.attr('fill', 'white')
+	// 	.attr('opacity', 0.3)
+	// var arc_legend_T1 = arc_legend.append('text').attr('class','arcGraphT')
+	// 	.attr('x', AL_w/2).attr('y', AL_h/2-6)
+	// 	.text('abc')
+	// var arc_legend_T2 = arc_legend.append('text').attr('class','arcGraphT')
+	// 	.attr('x', AL_w/2).attr('y', AL_h/2+6)
+	// 	.text('asss')
 //------------- graph ends --------------------------------------//
 ///////////////////////////////////////////////////////////////////
 
 // }
 
 
-// var ttt = bri_arcM.append('text')
-// 	.text('adfad').attr('class','arcGraphT').attr('transform', 'translate('+(0)+','+30+')rotate(45)')
-
+//blue change color #8be3ff, #1a93c7, #1cb4ff
+//red change color #e37f7e, #b84340, #e5504b
 // graph on////////
+var colorsM_on = d3.scale.ordinal()
+        .range(['#8be3ff', '#1a93c7', '#1cb4ff'])
+
+
+var cl, idd;
 d3.select('#graph').selectAll('path')
 	.on("mouseover", function(datum){
-		console.log(datum);
-		d3.select(this).transition().attr('opacity', 0.7)
-		var cl = d3.select(this).attr('class');
-		var idd = d3.select(this).attr('id') 
-		if (cl == 'man'){
+	
+		console.log(datum)
+
+		cl = d3.select(this).attr('class');
+		idd = d3.select(this).attr('id') 
+		
 			if (idd == 'sat0') {
 				sat_artT1.text('male').transition().attr('opacity', 1)
-				sat_arcT.text('Vivider').transition().attr('opacity', 1); 	
+				sat_arcT.text('Vivider') 	
 				sat_artT2.text( Math.round(43/male*1000)/10+'%').transition().attr('opacity', 1);
+				d3.select('#'+idd).transition().attr('fill', '#8be3ff').attr('opacity', .9)
 			} else if (idd == 'sat1') {
 				sat_artT1.text('male').transition().attr('opacity', 1)
-				sat_arcT.text('Alike').transition().attr('opacity', 1); 	
+				sat_arcT.text('Alike'); 	
 				sat_artT2.text( Math.round(11/male*1000)/10+'%').transition().attr('opacity', 1);
+				d3.select('#'+idd).transition().attr('fill', '#1a93c7').attr('opacity', .9)
 			}else if (idd == 'sat2') {
 				sat_artT1.text('male').transition().attr('opacity', 1)
-				sat_arcT.text('Duller').transition().attr('opacity', 1); 	
+				sat_arcT.text('Duller');
 				sat_artT2.text( Math.round(42/male*1000)/10+'%').transition().attr('opacity', 1);
+				d3.select('#'+idd).transition().attr('fill', '#1cb4ff').attr('opacity', .9)
 			}
 			
-		} else{
-			sat_artT1.text('female')
-		}
-		// d3.selectAll('path').attr('opacity',0);
-		//가운데 또는 위에 또는 아래 옆에다가 
-		//M brighter 75% or 75% M chose brighter 
-		//75% M brighter
-		//F vivider 55%
+			if (idd == 'satF0'){
+				sat_artT1.text('female').transition().attr('opacity', 1)
+				sat_arcT.text('Vivider') 
+				sat_artT2.text( Math.round(42/female*1000)/10+'%').transition().attr('opacity', 1);
+				d3.select('#'+idd).transition().attr('fill', '#e37f7e').attr('opacity', .9)
+			}
+			else if (idd == 'satF1'){
+				sat_artT1.text('female').transition().attr('opacity', 1)
+				sat_arcT.text('Alike'); 	
+				sat_artT2.text( Math.round(8/female*1000)/10+'%').transition().attr('opacity', 1);
+				d3.select('#'+idd).transition().attr('fill', '#b84340').attr('opacity', .9)
+			}
+			else if (idd == 'satF2'){
+				sat_artT1.text('female').transition().attr('opacity', 1)
+				sat_arcT.text('Duller');
+				sat_artT2.text( Math.round(42/female*1000)/10+'%').transition().attr('opacity', 1);
+				d3.select('#'+idd).transition().attr('fill', '#e5504b').attr('opacity', .9)
+			}
+
+			if (idd == 'bri0'){
+				bri_artT1.text('male').transition().attr('opacity', 1)
+				bri_arcT.text('Brighter') 
+				bri_artT2.text( Math.round(66/male*1000)/10+'%').transition().attr('opacity', 1);
+				d3.select('#'+idd).transition().attr('fill', '#8be3ff').attr('opacity', .9)
+			}
+			else if (idd == 'bri1'){
+				bri_artT1.text('male').transition().attr('opacity', 1)
+				bri_arcT.text('Alike'); 	
+				bri_artT2.text( Math.round(5/male*1000)/10+'%').transition().attr('opacity', 1);
+				d3.select('#'+idd).transition().attr('fill', '#1a93c7').attr('opacity', .9)
+			}
+			else if (idd == 'bri2'){
+				bri_artT1.text('male').transition().attr('opacity', 1)
+				bri_arcT.text('Darker');
+				bri_artT2.text( Math.round(25/male*1000)/10+'%').transition().attr('opacity', 1);
+				d3.select('#'+idd).transition().attr('fill', '#1cb4ff').attr('opacity', .9)
+			}
+
+			if (idd == 'briF0'){
+				bri_artT1.text('female').transition().attr('opacity', 1)
+				bri_arcT.text('Brighter') 
+				bri_artT2.text( Math.round(67/female*1000)/10+'%').transition().attr('opacity', 1);
+				d3.select('#'+idd).transition().attr('fill', '#e37f7e').attr('opacity', .9)
+			}
+			else if (idd == 'briF1'){
+				bri_artT1.text('female').transition().attr('opacity', 1)
+				bri_arcT.text('Alike'); 	
+				bri_artT2.text( Math.round(7/female*1000)/10+'%').transition().attr('opacity', 1);
+				d3.select('#'+idd).transition().attr('fill', '#b84340').attr('opacity', .9)
+			}
+			else if (idd == 'briF2'){
+				bri_artT1.text('female').transition().attr('opacity', 1)
+				bri_arcT.text('Darker');
+				bri_artT2.text( Math.round(18/female*1000)/10+'%').transition().attr('opacity', 1);
+				d3.select('#'+idd).transition().attr('fill', '#e5504b').attr('opacity', .9)
+			}
+
+
+			
+		
+
+		console.log("over",idd);
 	})
 	.on('mouseout', function(datum){
-		d3.select(this).transition().attr('opacity', 1)
-		sat_artT1.transition().attr('opacity', 0);
-		sat_artT2.transition().attr('opacity', 0);
+		sat_arcT.text('Saturation')
+		sat_artT1.transition().attr('opacity',0)
+		sat_artT2.transition().attr('opacity',0)
+
+		bri_arcT.text('Brightness')
+		bri_artT1.transition().attr('opacity',0)
+		bri_artT2.transition().attr('opacity',0)
+
+		if (idd == 'sat0') {
+			d3.select('#'+idd).transition().attr('fill', '#c4f3ff').attr('opacity', 1)
+		} else if (idd == 'sat1') {
+			d3.select('#'+idd).transition().attr('fill', '#58abc6').attr('opacity', 1)
+		}else if (idd == 'sat2') {
+			d3.select('#'+idd).transition().attr('fill', '#70d5ff').attr('opacity', 1)
+		}
+		if (idd == 'satF0'){
+			d3.select('#'+idd).transition().attr('fill', '#dfadac').attr('opacity', 1)
+		}
+		else if (idd == 'satF1'){
+			d3.select('#'+idd).transition().attr('fill', '#b56766').attr('opacity', 1)
+		}
+		else if (idd == 'satF2'){
+			d3.select('#'+idd).transition().attr('fill', '#e37f7e').attr('opacity', 1)
+		}
+
+		if (idd == 'bri0') {
+			d3.select('#'+idd).transition().attr('fill', '#c4f3ff').attr('opacity', 1)
+		} else if (idd == 'bri1') {
+			d3.select('#'+idd).transition().attr('fill', '#58abc6').attr('opacity', 1)
+		}else if (idd == 'bri2') {
+			d3.select('#'+idd).transition().attr('fill', '#70d5ff').attr('opacity', 1)
+		}
+		if (idd == 'briF0'){
+			d3.select('#'+idd).transition().attr('fill', '#dfadac').attr('opacity', 1)
+		}
+		else if (idd == 'briF1'){
+			d3.select('#'+idd).transition().attr('fill', '#b56766').attr('opacity', 1)
+		}
+		else if (idd == 'briF2'){
+			d3.select('#'+idd).transition().attr('fill', '#e37f7e').attr('opacity', 1)
+		}
+
 	})
+	// .on('mousemove', function () {
+	    
+	//    var coordinates = [0, 0];
+	// 	coordinates = d3.mouse(this);
+	// 	var x = coordinates[0];
+	// 	var y = coordinates[1];
+	// 	console.log(x, y)
+	// 	var dist = Math.sqrt( Math.pow(x, 2) + Math.pow(y, 2) );
+	// 	var theta = Math.atan(Math.abs(y/x));
+	// 	var an = Math.PI/4;
+	// 	var dx = dist*Math.cos(theta+an);
+	// 	var dy = dist*Math.sin(theta+an);
+	// 	arc_legend.attr('transform','translate('+(w*41/50+x+dx)+','+(graphH/2+y+dy ) +')') 
+	// })
+
 // /////////////////
 
 ///////////////////////////////////////////////////////////////////
