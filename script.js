@@ -1064,7 +1064,7 @@ d3.select('#graph').selectAll('path')
 		}
 		else if (idd == 'satF2'){
 			d3.select('#'+idd).transition().attr('fill', '#e5504b')
-
+		}
 		if (idd == 'bri0') {
 			d3.select('#'+idd).transition().attr('fill', '#8be3ff')
 		} else if (idd == 'bri1') {
