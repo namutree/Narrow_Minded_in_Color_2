@@ -831,9 +831,9 @@ d3.csv("data_final_3.csv", function(error, data){
 	        return da;
 	    }).sort(null)
 	var colorsM = d3.scale.ordinal()
-        .range(['#c4f3ff', '#58abc6', '#70d5ff'])
+        .range(['#8be3ff', '#1a93c7', '#1cb4ff'])
    	var colorsF = d3.scale.ordinal()
-        .range(['#dfadac', '#b56766', '#e37f7e'])
+        .range([ '#e37f7e', '#b84340', '#e5504b'])
 
 	var maleRaius = w/12;
 	var arcM = d3.svg.arc()
@@ -946,12 +946,7 @@ d3.csv("data_final_3.csv", function(error, data){
 
 // }
 
-
-//blue change color #8be3ff, #1a93c7, #1cb4ff
-//red change color #e37f7e, #b84340, #e5504b
 // graph on////////
-var colorsM_on = d3.scale.ordinal()
-        .range(['#8be3ff', '#1a93c7', '#1cb4ff'])
 
 
 var cl, idd;
@@ -967,74 +962,74 @@ d3.select('#graph').selectAll('path')
 				sat_artT1.text('male').transition().attr('opacity', 1)
 				sat_arcT.text('Vivider') 	
 				sat_artT2.text( Math.round(43/male*1000)/10+'%').transition().attr('opacity', 1);
-				d3.select('#'+idd).transition().attr('fill', '#8be3ff').attr('opacity', .9)
+				d3.select('#'+idd).transition().attr('fill', '#c4f3ff')
 			} else if (idd == 'sat1') {
 				sat_artT1.text('male').transition().attr('opacity', 1)
 				sat_arcT.text('Alike'); 	
 				sat_artT2.text( Math.round(11/male*1000)/10+'%').transition().attr('opacity', 1);
-				d3.select('#'+idd).transition().attr('fill', '#1a93c7').attr('opacity', .9)
+				d3.select('#'+idd).transition().attr('fill', '#58abc6')
 			}else if (idd == 'sat2') {
 				sat_artT1.text('male').transition().attr('opacity', 1)
 				sat_arcT.text('Duller');
 				sat_artT2.text( Math.round(42/male*1000)/10+'%').transition().attr('opacity', 1);
-				d3.select('#'+idd).transition().attr('fill', '#1cb4ff').attr('opacity', .9)
+				d3.select('#'+idd).transition().attr('fill', '#70d5ff')
 			}
 			
 			if (idd == 'satF0'){
 				sat_artT1.text('female').transition().attr('opacity', 1)
 				sat_arcT.text('Vivider') 
 				sat_artT2.text( Math.round(42/female*1000)/10+'%').transition().attr('opacity', 1);
-				d3.select('#'+idd).transition().attr('fill', '#e37f7e').attr('opacity', .9)
+				d3.select('#'+idd).transition().attr('fill', '#dfadac')
 			}
 			else if (idd == 'satF1'){
 				sat_artT1.text('female').transition().attr('opacity', 1)
 				sat_arcT.text('Alike'); 	
 				sat_artT2.text( Math.round(8/female*1000)/10+'%').transition().attr('opacity', 1);
-				d3.select('#'+idd).transition().attr('fill', '#b84340').attr('opacity', .9)
+				d3.select('#'+idd).transition().attr('fill', '#b56766')
 			}
 			else if (idd == 'satF2'){
 				sat_artT1.text('female').transition().attr('opacity', 1)
 				sat_arcT.text('Duller');
 				sat_artT2.text( Math.round(42/female*1000)/10+'%').transition().attr('opacity', 1);
-				d3.select('#'+idd).transition().attr('fill', '#e5504b').attr('opacity', .9)
+				d3.select('#'+idd).transition().attr('fill', '#e37f7e')
 			}
 
 			if (idd == 'bri0'){
 				bri_artT1.text('male').transition().attr('opacity', 1)
 				bri_arcT.text('Brighter') 
 				bri_artT2.text( Math.round(66/male*1000)/10+'%').transition().attr('opacity', 1);
-				d3.select('#'+idd).transition().attr('fill', '#8be3ff').attr('opacity', .9)
+				d3.select('#'+idd).transition().attr('fill', '#c4f3ff')
 			}
 			else if (idd == 'bri1'){
 				bri_artT1.text('male').transition().attr('opacity', 1)
 				bri_arcT.text('Alike'); 	
 				bri_artT2.text( Math.round(5/male*1000)/10+'%').transition().attr('opacity', 1);
-				d3.select('#'+idd).transition().attr('fill', '#1a93c7').attr('opacity', .9)
+				d3.select('#'+idd).transition().attr('fill', '#58abc6')
 			}
 			else if (idd == 'bri2'){
 				bri_artT1.text('male').transition().attr('opacity', 1)
 				bri_arcT.text('Darker');
 				bri_artT2.text( Math.round(25/male*1000)/10+'%').transition().attr('opacity', 1);
-				d3.select('#'+idd).transition().attr('fill', '#1cb4ff').attr('opacity', .9)
+				d3.select('#'+idd).transition().attr('fill', '#70d5ff')
 			}
 
 			if (idd == 'briF0'){
 				bri_artT1.text('female').transition().attr('opacity', 1)
 				bri_arcT.text('Brighter') 
 				bri_artT2.text( Math.round(67/female*1000)/10+'%').transition().attr('opacity', 1);
-				d3.select('#'+idd).transition().attr('fill', '#e37f7e').attr('opacity', .9)
+				d3.select('#'+idd).transition().attr('fill', '#dfadac')
 			}
 			else if (idd == 'briF1'){
 				bri_artT1.text('female').transition().attr('opacity', 1)
 				bri_arcT.text('Alike'); 	
 				bri_artT2.text( Math.round(7/female*1000)/10+'%').transition().attr('opacity', 1);
-				d3.select('#'+idd).transition().attr('fill', '#b84340').attr('opacity', .9)
+				d3.select('#'+idd).transition().attr('fill', '#b56766')
 			}
 			else if (idd == 'briF2'){
 				bri_artT1.text('female').transition().attr('opacity', 1)
 				bri_arcT.text('Darker');
 				bri_artT2.text( Math.round(18/female*1000)/10+'%').transition().attr('opacity', 1);
-				d3.select('#'+idd).transition().attr('fill', '#e5504b').attr('opacity', .9)
+				d3.select('#'+idd).transition().attr('fill', '#e37f7e')
 			}
 
 
@@ -1051,39 +1046,40 @@ d3.select('#graph').selectAll('path')
 		bri_arcT.text('Brightness')
 		bri_artT1.transition().attr('opacity',0)
 		bri_artT2.transition().attr('opacity',0)
+		//blue original color #8be3ff, #1a93c7, #1cb4ff
+		//red original color #e37f7e, #b84340, #e5504b
 
 		if (idd == 'sat0') {
-			d3.select('#'+idd).transition().attr('fill', '#c4f3ff').attr('opacity', 1)
+			d3.select('#'+idd).transition().attr('fill', '#8be3ff')
 		} else if (idd == 'sat1') {
-			d3.select('#'+idd).transition().attr('fill', '#58abc6').attr('opacity', 1)
+			d3.select('#'+idd).transition().attr('fill', '#1a93c7')
 		}else if (idd == 'sat2') {
-			d3.select('#'+idd).transition().attr('fill', '#70d5ff').attr('opacity', 1)
+			d3.select('#'+idd).transition().attr('fill', '#1cb4ff')
 		}
 		if (idd == 'satF0'){
-			d3.select('#'+idd).transition().attr('fill', '#dfadac').attr('opacity', 1)
+			d3.select('#'+idd).transition().attr('fill', '#e37f7e')
 		}
 		else if (idd == 'satF1'){
-			d3.select('#'+idd).transition().attr('fill', '#b56766').attr('opacity', 1)
+			d3.select('#'+idd).transition().attr('fill', '#b84340')
 		}
 		else if (idd == 'satF2'){
-			d3.select('#'+idd).transition().attr('fill', '#e37f7e').attr('opacity', 1)
-		}
+			d3.select('#'+idd).transition().attr('fill', '#e5504b')
 
 		if (idd == 'bri0') {
-			d3.select('#'+idd).transition().attr('fill', '#c4f3ff').attr('opacity', 1)
+			d3.select('#'+idd).transition().attr('fill', '#8be3ff')
 		} else if (idd == 'bri1') {
-			d3.select('#'+idd).transition().attr('fill', '#58abc6').attr('opacity', 1)
+			d3.select('#'+idd).transition().attr('fill', '#1a93c7')
 		}else if (idd == 'bri2') {
-			d3.select('#'+idd).transition().attr('fill', '#70d5ff').attr('opacity', 1)
+			d3.select('#'+idd).transition().attr('fill', '#1cb4ff')
 		}
 		if (idd == 'briF0'){
-			d3.select('#'+idd).transition().attr('fill', '#dfadac').attr('opacity', 1)
+			d3.select('#'+idd).transition().attr('fill', '#e37f7e')
 		}
 		else if (idd == 'briF1'){
-			d3.select('#'+idd).transition().attr('fill', '#b56766').attr('opacity', 1)
+			d3.select('#'+idd).transition().attr('fill', '#b84340')
 		}
 		else if (idd == 'briF2'){
-			d3.select('#'+idd).transition().attr('fill', '#e37f7e').attr('opacity', 1)
+			d3.select('#'+idd).transition().attr('fill', '#e5504b')
 		}
 
 	})
