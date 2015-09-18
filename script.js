@@ -413,7 +413,7 @@ d3.csv("data_final_3.csv", function(error, data){
 			.attr('height', imgH)
 			.attr('xlink:href', function(d){
 				var pic = (d.Original_id);
-				return 'data/imgs/'+pic+'.jpg';
+				return 'data/image/'+pic+'.jpg';
 			})
 
 	patternRect = eachCollum.append('rect')
