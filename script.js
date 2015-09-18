@@ -7,7 +7,7 @@ var male =0,
 	female =0;
 
 var sData =[];
-console.log(w);
+// console.log(w);
 
 var eachCollum
 var makingPattern
@@ -49,7 +49,7 @@ var xPos,
 //id,Original_id,Sel_r,Sel_g,Sel_b,sex,Ori_r,Ori_g,Ori_b,Sel_hue,Sel_sat,Sel_bri,Ori_hue,Ori_sat,Ori_bri,Bri_sub, bri_sub_order,Sat_sub,sat_sub_order
 d3.csv("data_final_3.csv", function(error, data){
 	var n = data.length;
-	console.log(n);
+	// console.log(n);
 
 	if (error) throw error;
 	data.forEach(function(d){
@@ -74,7 +74,7 @@ d3.csv("data_final_3.csv", function(error, data){
 					Bri_sub: +d.Bri_sub
 				});
     });
-	console.log('male:', male,' female:', female);
+	// console.log('male:', male,' female:', female);
 
     xPos = d3.scale.ordinal()
         .domain(d3.range(0, sData.length))
@@ -797,7 +797,6 @@ d3.csv("data_final_3.csv", function(error, data){
 		f_vivider=0,  f_sat_alike=0, f_duller=0;
 
 	for(var i=0 ; i <sData.length ; i++){
-
 		
 		if((sData[i].Sat_sub) >1) {
 			if(sData[i].sex ==1) m_duller++;
@@ -836,13 +835,14 @@ d3.csv("data_final_3.csv", function(error, data){
         .range([ '#e37f7e', '#b84340', '#e5504b'])
 
 	var maleRaius = w/12;
+
 	var arcM = d3.svg.arc()
 	    .outerRadius(maleRaius)
-	    .innerRadius(maleRaius-20)
+	    .innerRadius(maleRaius-w/60)
 
    	var arcF = d3.svg.arc()
-	    .outerRadius(maleRaius-19)
-	    .innerRadius(maleRaius-39)
+	    .outerRadius(maleRaius- (w/60-1) )
+	    .innerRadius(maleRaius- (w/60*2) )
 
 	var arcGraph = graph.append('g').attr('id', 'arcGraph');
 
@@ -851,7 +851,7 @@ d3.csv("data_final_3.csv", function(error, data){
 		.enter().append('g')
 	var bri_arcMM = bri_arcM.append('path')
 		.attr('fill', function(d, i) {
-			console.log(d)
+			// console.log(d)
             return colorsM(i);
         })
 		.attr('d', arcM)
@@ -865,7 +865,7 @@ d3.csv("data_final_3.csv", function(error, data){
 		.enter().append('g')
 	bri_arcF.append('path')
 		.attr('fill', function(d, i) {
-            console.log(d)
+            // console.log(d)
             return colorsF(i);
         })
 		.attr('d', arcF)
@@ -921,26 +921,6 @@ d3.csv("data_final_3.csv", function(error, data){
 	var sat_artT2 = arcGraph.append('text')
 		.attr('class','arcGraphT')
 		.attr('transform', 'translate('+(w*41/50)+','+(graphH/2+20)+')')
-	// var arc_legend = arcGraph.append('g')
-	// 	.attr('id', 'arc_legend')
-	// 	.attr('opacity', 1)
-	// 	.attr('x', 1000)
-	// var AL_w = 50,
-	// 	AL_h = 50;
-	// var arc_legend_B = arc_legend.append('rect')
-	// 	// rx="20" ry="20" width="150" height="150"
-	// 	.attr('rx' , '5')
-	// 	.attr('ry' , '5')
-	// 	.attr('width' , AL_w)
-	// 	.attr('height' , AL_h)
-	// 	.attr('fill', 'white')
-	// 	.attr('opacity', 0.3)
-	// var arc_legend_T1 = arc_legend.append('text').attr('class','arcGraphT')
-	// 	.attr('x', AL_w/2).attr('y', AL_h/2-6)
-	// 	.text('abc')
-	// var arc_legend_T2 = arc_legend.append('text').attr('class','arcGraphT')
-	// 	.attr('x', AL_w/2).attr('y', AL_h/2+6)
-	// 	.text('asss')
 //------------- graph ends --------------------------------------//
 ///////////////////////////////////////////////////////////////////
 
@@ -953,7 +933,7 @@ var cl, idd;
 d3.select('#graph').selectAll('path')
 	.on("mouseover", function(datum){
 	
-		console.log(datum)
+		// console.log(datum)
 
 		cl = d3.select(this).attr('class');
 		idd = d3.select(this).attr('id') 
@@ -1031,12 +1011,6 @@ d3.select('#graph').selectAll('path')
 				bri_artT2.text( Math.round(18/female*1000)/10+'%').transition().attr('opacity', 1);
 				d3.select('#'+idd).transition().attr('fill', '#e37f7e')
 			}
-
-
-			
-		
-
-		console.log("over",idd);
 	})
 	.on('mouseout', function(datum){
 		sat_arcT.text('Saturation')
@@ -1064,7 +1038,7 @@ d3.select('#graph').selectAll('path')
 		}
 		else if (idd == 'satF2'){
 			d3.select('#'+idd).transition().attr('fill', '#e5504b')
-
+		}
 		if (idd == 'bri0') {
 			d3.select('#'+idd).transition().attr('fill', '#8be3ff')
 		} else if (idd == 'bri1') {

@@ -35,7 +35,7 @@ legend{
 	font-family: 'roboto', san-serif;
 	font-weight: 400;
 	text-anchor: middle;
-	font-size: 0.7em;
+	font-size: 0.8em;
 	dominant-baseline: central;
 	fill: white;
 }
@@ -94,7 +94,7 @@ legend{
 	font-weight: 100;
 	text-anchor: left;
 	dominant-baseline: text-before-edge;
-	font-size: 0.5em;
+	font-size: 0.7em;
 	fill: white;
 }
 .graphText{
@@ -102,7 +102,7 @@ legend{
 	font-weight: 100;
 	text-anchor: start;
 	dominant-baseline: text-before-edge;
-	font-size: 0.5em;
+	font-size: 0.7em;
 	fill: white;
 }
 .graphText2{
@@ -110,7 +110,7 @@ legend{
 	font-weight: 100;
 	text-anchor: end;
 	dominant-baseline: text-before-edge;
-	font-size: 0.5em;
+	font-size: 0.7em;
 	fill: white;
 }
 .graph_legendT{
